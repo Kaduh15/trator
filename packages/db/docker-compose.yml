@@ -1,0 +1,23 @@
+name: trator
+
+services:
+  postgres:
+    image: postgres
+    container_name: trator-postgres
+    environment:
+      POSTGRES_DB: trator
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - trator_postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  trator_postgres_data:

@@ -1,0 +1,50 @@
+{
+  "name": "trator",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "dev:native": "turbo -F native dev",
+    "dev:web": "turbo -F web dev",
+    "dev:server": "turbo -F server dev",
+    "db:push": "turbo -F @trator/db db:push",
+    "db:studio": "turbo -F @trator/db db:studio",
+    "db:generate": "turbo -F @trator/db db:generate",
+    "db:migrate": "turbo -F @trator/db db:migrate",
+    "db:start": "turbo -F @trator/db db:start",
+    "db:watch": "turbo -F @trator/db db:watch",
+    "db:stop": "turbo -F @trator/db db:stop",
+    "db:down": "turbo -F @trator/db db:down",
+    "check": "ultracite check",
+    "fix": "ultracite fix",
+    "prepare": "husky",
+    "ruler:apply": "pnpm dlx @intellectronica/ruler@latest apply --local-only"
+  },
+  "dependencies": {
+    "@trator/env": "workspace:*",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.0",
+    "@trator/config": "workspace:*",
+    "@types/node": "catalog:",
+    "husky": "latest",
+    "lint-staged": "latest",
+    "turbo": "^2.6.3",
+    "typescript": "catalog:",
+    "ultracite": "7.2.3"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [
+      "pnpm dlx ultracite fix"
+    ]
+  },
+  "packageManager": "pnpm@10.27.0"
+}

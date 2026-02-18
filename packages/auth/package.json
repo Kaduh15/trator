@@ -1,0 +1,24 @@
+{
+  "name": "@trator/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@trator/db": "workspace:*",
+    "@trator/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@trator/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
