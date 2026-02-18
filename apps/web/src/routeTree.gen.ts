@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as privateTratorRouteRouteImport } from './routes/(private)/trator/route'
 import { Route as privateadminRouteRouteImport } from './routes/(private)/(admin)/route'
+import { Route as privateTratorServicosRouteImport } from './routes/(private)/trator/servicos'
 import { Route as privateTratorHorasRouteImport } from './routes/(private)/trator/horas'
 import { Route as privateadminDashboardRouteImport } from './routes/(private)/(admin)/dashboard'
 
@@ -29,6 +30,11 @@ const privateadminRouteRoute = privateadminRouteRouteImport.update({
   id: '/(private)/(admin)',
   getParentRoute: () => rootRouteImport,
 } as any)
+const privateTratorServicosRoute = privateTratorServicosRouteImport.update({
+  id: '/servicos',
+  path: '/servicos',
+  getParentRoute: () => privateTratorRouteRoute,
+} as any)
 const privateTratorHorasRoute = privateTratorHorasRouteImport.update({
   id: '/horas',
   path: '/horas',
@@ -45,12 +51,14 @@ export interface FileRoutesByFullPath {
   '/trator': typeof privateTratorRouteRouteWithChildren
   '/dashboard': typeof privateadminDashboardRoute
   '/trator/horas': typeof privateTratorHorasRoute
+  '/trator/servicos': typeof privateTratorServicosRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/trator': typeof privateTratorRouteRouteWithChildren
   '/dashboard': typeof privateadminDashboardRoute
   '/trator/horas': typeof privateTratorHorasRoute
+  '/trator/servicos': typeof privateTratorServicosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +67,18 @@ export interface FileRoutesById {
   '/(private)/trator': typeof privateTratorRouteRouteWithChildren
   '/(private)/(admin)/dashboard': typeof privateadminDashboardRoute
   '/(private)/trator/horas': typeof privateTratorHorasRoute
+  '/(private)/trator/servicos': typeof privateTratorServicosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/trator' | '/dashboard' | '/trator/horas'
+  fullPaths:
+    | '/login'
+    | '/trator'
+    | '/dashboard'
+    | '/trator/horas'
+    | '/trator/servicos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/trator' | '/dashboard' | '/trator/horas'
+  to: '/login' | '/trator' | '/dashboard' | '/trator/horas' | '/trator/servicos'
   id:
     | '__root__'
     | '/login'
@@ -72,6 +86,7 @@ export interface FileRouteTypes {
     | '/(private)/trator'
     | '/(private)/(admin)/dashboard'
     | '/(private)/trator/horas'
+    | '/(private)/trator/servicos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -103,6 +118,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof privateadminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(private)/trator/servicos': {
+      id: '/(private)/trator/servicos'
+      path: '/servicos'
+      fullPath: '/trator/servicos'
+      preLoaderRoute: typeof privateTratorServicosRouteImport
+      parentRoute: typeof privateTratorRouteRoute
+    }
     '/(private)/trator/horas': {
       id: '/(private)/trator/horas'
       path: '/horas'
@@ -133,10 +155,12 @@ const privateadminRouteRouteWithChildren =
 
 interface privateTratorRouteRouteChildren {
   privateTratorHorasRoute: typeof privateTratorHorasRoute
+  privateTratorServicosRoute: typeof privateTratorServicosRoute
 }
 
 const privateTratorRouteRouteChildren: privateTratorRouteRouteChildren = {
   privateTratorHorasRoute: privateTratorHorasRoute,
+  privateTratorServicosRoute: privateTratorServicosRoute,
 }
 
 const privateTratorRouteRouteWithChildren =
