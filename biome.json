@@ -8,7 +8,6 @@
   "files": {
     "ignoreUnknown": false,
     "includes": [
-      "**",
       "!**/.next",
       "!**/dist",
       "!**/.turbo",
@@ -25,12 +24,15 @@
       "!**/.svelte-kit",
       "!**/wrangler.jsonc",
       "!**/.source",
-      "!**/convex/_generated"
+      "!**/convex/_generated",
+      "!apps/web/src/components/ui/**/*.{ts,tsx}"
     ]
   },
   "formatter": {
     "enabled": true,
-    "indentStyle": "tab"
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 80
   },
   "assist": {
     "actions": {
@@ -42,6 +44,10 @@
   "linter": {
     "enabled": true,
     "rules": {
+      "performance": {
+        "noNamespaceImport": "off",
+        "noBarrelFile": "off"
+      },
       "recommended": true,
       "correctness": {
         "useExhaustiveDependencies": "info"
@@ -71,7 +77,8 @@
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "double"
+      "quoteStyle": "single",
+      "semicolons": "asNeeded"
     }
   },
   "css": {
