@@ -1,9 +1,9 @@
-import tailwindcss from "@tailwindcss/vite";
-import { tanstackRouter } from "@tanstack/router-plugin/vite";
-import react from "@vitejs/plugin-react";
-import path from "node:path";
-import { defineConfig } from "vite";
-import { VitePWA } from "vite-plugin-pwa";
+import path from 'node:path'
+import tailwindcss from '@tailwindcss/vite'
+import { tanstackRouter } from '@tanstack/router-plugin/vite'
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   plugins: [
@@ -11,12 +11,12 @@ export default defineConfig({
     tanstackRouter({}),
     react(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: 'autoUpdate',
       manifest: {
-        name: "trator",
-        short_name: "trator",
-        description: "trator - PWA Application",
-        theme_color: "#0c0c0c",
+        name: 'trator',
+        short_name: 'trator',
+        description: 'trator - PWA Application',
+        theme_color: '#0c0c0c',
       },
       pwaAssets: { disabled: false, config: true },
       devOptions: { enabled: true },
@@ -24,10 +24,10 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(import.meta.dirname, './src'),
     },
   },
   server: {
     port: 3001,
   },
-});
+})
