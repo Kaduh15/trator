@@ -16,105 +16,121 @@ export const Route = createFileRoute('/(private)/trator/horas')({
 
 function RouteComponent() {
   const isFilterMonth = true
+  const selectedPeriodLabel = 'Junho 2024'
+
+  const summaryCards = [
+    {
+      id: 'total-hours',
+      icon: ClockIcon,
+      label: 'Total de Horas',
+      value: '6h 30min',
+      valueClassName: 'text-base',
+    },
+    {
+      id: 'estimated-earnings',
+      icon: DollarSignIcon,
+      label: 'Ganhos Estimados',
+      value: 'R$ 600,00',
+      valueClassName: 'text-base text-primary',
+    },
+  ] as const
+
+  const dailyEntries = [
+    {
+      id: '2024-02-17',
+      label: 'Ter 17/02',
+      hours: '2h 30min',
+      earnings: 'R$ 250,00',
+    },
+    {
+      id: '2024-02-18',
+      label: 'Qua 18/02',
+      hours: '2h 30min',
+      earnings: 'R$ 250,00',
+    },
+  ] as const
 
   return (
-    <div>
-      <header className="flex items-center justify-between border-b-2 p-2">
-        <h1>Minhas Horas</h1>
-        <Button type="button" variant="ghost">
-          <LogOutIcon />
+    <div className="min-h-dvh bg-background">
+      <header className="flex items-center justify-between border-b bg-background px-4 py-3">
+        <div>
+          <p className="text-muted-foreground text-xs uppercase tracking-wide">
+            Trator
+          </p>
+          <h1 className="font-semibold text-lg">Minhas Horas</h1>
+        </div>
+        <Button aria-label="Sair" size="icon" type="button" variant="ghost">
+          <LogOutIcon className="size-4" />
         </Button>
       </header>
 
-      <main className="space-y-4 p-4">
-        <div className="flex w-full items-center justify-between gap-4 bg-accent px-4 py-2">
-          <p>Valor hora atual</p>
+      <main className="space-y-6 px-4 py-6">
+        <section className="space-y-3">
+          <ButtonGroup className="w-full">
+            <Button
+              className="flex-1"
+              variant={isFilterMonth ? 'outline' : 'default'}
+            >
+              Semana
+            </Button>
+            <ButtonGroupSeparator />
+            <Button
+              className="flex-1"
+              variant={isFilterMonth ? 'default' : 'outline'}
+            >
+              Mês
+            </Button>
+          </ButtonGroup>
+        </section>
 
-          <p>R$ 100,00/h</p>
-        </div>
-
-        <ButtonGroup className="flex w-full">
-          <Button
-            className="flex-1 hover:cursor-pointer"
-            variant={isFilterMonth ? 'outline' : 'default'}
-          >
-            Semana
+        <section className="flex items-center justify-between gap-3 rounded-lg border bg-card px-4 py-2">
+          <Button aria-label="Período anterior" size="icon" variant="ghost">
+            <ChevronLeftIcon className="size-4" />
           </Button>
-          <ButtonGroupSeparator />
-          <Button
-            className="flex-1 hover:cursor-pointer"
-            variant={isFilterMonth ? 'default' : 'outline'}
-          >
-            Mês
+          <p className="font-medium text-sm">{selectedPeriodLabel}</p>
+          <Button aria-label="Proximo período" size="icon" variant="ghost">
+            <ChevronRightIcon className="size-4" />
           </Button>
-        </ButtonGroup>
+        </section>
 
-        <div className="flex w-full items-center justify-around gap-4">
-          <Button variant="secondary">
-            <ChevronLeftIcon />
-          </Button>
-          <p>Junho 2024</p>
-          <Button variant="secondary">
-            <ChevronRightIcon />
-          </Button>
-        </div>
-
-        <div className="flex justify-between gap-2">
-          <Card className="flex-1">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xs">
-                <ClockIcon className="text-primary" />
-                Total de Horas
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl">6h 30min</p>
-            </CardContent>
-          </Card>
-          <Card className="flex-1">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xs">
-                <DollarSignIcon className="text-primary" />
-                Ganhos Estimados
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl text-primary">R$ 600,00</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div>
-          <p>Por dia</p>
-          <ul className="mt-2 space-y-2">
-            <li className="flex items-center justify-between rounded-md">
-              <Card className="w-full">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 font-bold text-xs">
-                    Ter 17/02
+        <section className="flex items-center justify-start gap-4 overflow-auto">
+          {summaryCards.map(
+            ({ id, icon: Icon, label, value, valueClassName }) => (
+              <Card className="flex-1" key={id}>
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 font-medium text-muted-foreground text-xs">
+                    <Icon className="size-4 text-primary" />
+                    <p className="max-w-2/3 truncate">{label}</p>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex items-center justify-between">
-                  <p className='text-base'>2h 30min</p>
-                  <p className="text-base text-primary">R$ 250,00</p>
+                <CardContent>
+                  <p className={valueClassName}>{value}</p>
                 </CardContent>
               </Card>
-            </li>
-            <li className="flex items-center justify-between rounded-md">
-              <Card className="w-full">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 font-bold text-xs">
-                    Qua 18/02
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="flex items-center justify-between">
-                  <p className='text-base'>2h 30min</p>
-                  <p className="text-base text-primary">R$ 250,00</p>
+            )
+          )}
+        </section>
+
+        <section className="space-y-3">
+          <p className="font-medium text-sm">Por dia</p>
+          <div className="space-y-2">
+            {dailyEntries.map((entry) => (
+              <Card key={entry.id}>
+                <CardContent className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="font-semibold text-sm">{entry.label}</p>
+                    <p className="text-sm">{entry.hours}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold text-base text-primary">
+                      {entry.earnings}
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
-            </li>
-          </ul>
-        </div>
+            ))}
+          </div>
+        </section>
       </main>
     </div>
   )
