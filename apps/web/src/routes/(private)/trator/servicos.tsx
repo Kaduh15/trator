@@ -1,0 +1,41 @@
+import { createFileRoute } from '@tanstack/react-router'
+import { LogOutIcon, PlusIcon } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+
+export const Route = createFileRoute('/(private)/trator/servicos')({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
+  return (
+    <div>
+      <header className="flex items-center justify-between border-b bg-background px-4 py-3">
+        <div>
+          <p className="text-muted-foreground text-xs uppercase tracking-wide">
+            Trator
+          </p>
+          <h1 className="font-semibold text-lg">Meus Serviços</h1>
+        </div>
+        <Button aria-label="Sair" size="icon" type="button" variant="ghost">
+          <LogOutIcon className="size-4" />
+        </Button>
+      </header>
+
+      <main className="flex min-h-[calc(100vh-5rem)] flex-col justify-between gap-4">
+        {/* Lista de serviços */}
+        <section className="flex-1 p-4">
+          <p className="font-medium text-sm">Serviços cadastrados</p>
+        </section>
+
+        <Separator orientation="horizontal" />
+
+        {/* Botão para criar um novo serviço */}
+        <Button className="mx-2 px-4 py-2" size="sm">
+          <PlusIcon className="size-4" />
+          Criar Novo Serviço
+        </Button>
+      </main>
+    </div>
+  )
+}
