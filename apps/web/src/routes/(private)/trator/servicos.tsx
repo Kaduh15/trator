@@ -9,7 +9,7 @@ export const Route = createFileRoute('/(private)/trator/servicos')({
 
 function RouteComponent() {
   return (
-    <div>
+    <div className="flex h-full flex-col">
       <header className="flex items-center justify-between border-b bg-background px-4 py-3">
         <div>
           <p className="text-muted-foreground text-xs uppercase tracking-wide">
@@ -22,7 +22,7 @@ function RouteComponent() {
         </Button>
       </header>
 
-      <main className="flex min-h-[calc(100vh-5rem)] flex-col justify-between gap-4">
+      <main className="mb-16 flex flex-1 flex-col justify-between gap-4">
         {/* Lista de serviços */}
         <section className="flex-1 p-4">
           <p className="font-medium text-sm">Serviços cadastrados</p>
@@ -31,7 +31,7 @@ function RouteComponent() {
         <Separator orientation="horizontal" />
 
         {/* Botão para criar um novo serviço */}
-        <Button className="mx-2 px-4 py-2" size="sm">
+        <Button className="mx-2 py-4" size="sm">
           <PlusIcon className="size-4" />
           Criar Novo Serviço
         </Button>

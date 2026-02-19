@@ -18,14 +18,16 @@ export default function LoginForm() {
 
   const form = useForm({
     defaultValues: {
-      email: '',
+      username: '',
       password: '',
     },
     onSubmit: async ({ value }) => {
-      await authClient.signIn.email(
+      await authClient.signUp.email(
         {
-          email: value.email,
+          email: `${value.username}@email.com`,
+          name: value.username,
           password: value.password,
+          username: value.username,
         },
         {
           onSuccess: async () => {
@@ -48,7 +50,7 @@ export default function LoginForm() {
     },
     validators: {
       onSubmit: z.object({
-        email: z.email('Invalid email address'),
+        username: z.string().min(2, 'Username must be at least 2 characters'),
         password: z.string().min(8, 'Password must be at least 8 characters'),
       }),
     },
@@ -71,16 +73,16 @@ export default function LoginForm() {
         }}
       >
         <div>
-          <form.Field name="email">
+          <form.Field name="username">
             {(field) => (
               <div className="space-y-2">
-                <Label htmlFor={field.name}>Email</Label>
+                <Label htmlFor={field.name}>Username</Label>
                 <Input
                   id={field.name}
                   name={field.name}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  type="email"
+                  type="text"
                   value={field.state.value}
                 />
                 {field.state.meta.errors.map((error) => (
