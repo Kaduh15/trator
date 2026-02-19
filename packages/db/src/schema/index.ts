@@ -1,1 +1,4 @@
 export * from './auth'
+export * from './clients'
+export * from './rate-setting'
+export * from './service'
