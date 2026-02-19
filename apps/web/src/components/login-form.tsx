@@ -22,10 +22,8 @@ export default function LoginForm() {
       password: '',
     },
     onSubmit: async ({ value }) => {
-      await authClient.signUp.email(
+      await authClient.signIn.username(
         {
-          email: `${value.username}@email.com`,
-          name: value.username,
           password: value.password,
           username: value.username,
         },
