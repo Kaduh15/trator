@@ -3,7 +3,7 @@ import * as schema from '@trator/db/schema/auth'
 import { env } from '@trator/env/server'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { admin, username } from 'better-auth/plugins'
+import { admin, openAPI, username } from 'better-auth/plugins'
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -22,5 +22,5 @@ export const auth = betterAuth({
       httpOnly: true,
     },
   },
-  plugins: [username(), admin()],
+  plugins: [username(), admin(), openAPI()],
 })
