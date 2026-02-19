@@ -5,9 +5,5 @@ export const requiredUser = cache(async () => {
 
   const session = await authClient.getSession()
 
-  if (!session.data) {
-    throw new Error('User is not authenticated')
-  }
-
-  return session.data.user
+  return session?.data?.user
 })

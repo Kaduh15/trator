@@ -1,16 +1,22 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
+import { ClipboardIcon, ClockIcon } from 'lucide-react'
 import { Links, Navbar } from '@/components/navbar'
 
-export const Route = createFileRoute('/(private)/(admin)')({
+export const Route = createFileRoute('/(private)/trator/(with-navbar)')({
   component: RouteComponent,
   beforeLoad: async () => {
     const { requiredUser } = await import('@/lib/required-user')
+    try {
+      const user = await requiredUser()
 
-    const user = await requiredUser()
-
-    if (user?.role !== 'admin') {
+      if (user?.role !== 'user') {
+        throw redirect({
+          to: '/dashboard',
+        })
+      }
+    } catch {
       throw redirect({
-        to: '/trator/horas',
+        to: '/login',
       })
     }
   },
@@ -22,15 +28,15 @@ function RouteComponent() {
       <Outlet />
       <Navbar className="fixed bottom-0 w-full">
         <Links
-          className="flex flex-col items-center justify-center gap-2"
           to="/trator/horas"
         >
+          <ClockIcon className="size-4" />
           Horas
         </Links>
         <Links
-          className="flex flex-col items-center justify-center gap-2"
           to="/trator/servicos"
         >
+          <ClipboardIcon className="size-4" />
           Serviços
         </Links>
       </Navbar>

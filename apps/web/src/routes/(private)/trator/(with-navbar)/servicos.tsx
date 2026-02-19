@@ -1,13 +1,15 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { LogOutIcon, PlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 
-export const Route = createFileRoute('/(private)/trator/servicos')({
+export const Route = createFileRoute('/(private)/trator/(with-navbar)/servicos')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
+  const navigate = useNavigate()
+
   return (
     <div className="flex h-full flex-col">
       <header className="flex items-center justify-between border-b bg-background px-4 py-3">
@@ -31,7 +33,15 @@ function RouteComponent() {
         <Separator orientation="horizontal" />
 
         {/* Botão para criar um novo serviço */}
-        <Button className="mx-2 py-4" size="sm">
+        <Button
+          className="mx-2 py-4"
+          onClick={() =>
+            navigate({
+              to: '/trator/servico/novo',
+            })
+          }
+          size="sm"
+        >
           <PlusIcon className="size-4" />
           Criar Novo Serviço
         </Button>

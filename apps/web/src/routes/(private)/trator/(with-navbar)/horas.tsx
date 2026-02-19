@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-export const Route = createFileRoute('/(private)/trator/horas')({
+export const Route = createFileRoute('/(private)/trator/(with-navbar)/horas')({
   component: RouteComponent,
 })
 
