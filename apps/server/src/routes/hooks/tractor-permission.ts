@@ -1,4 +1,6 @@
 import type { preHandlerHookHandler } from 'fastify'
+import { sendError } from '@/utils/http-error'
+import { HTTP_STATUS } from '@/utils/http-status'
 
 export const tractorPermission: preHandlerHookHandler = (
   request,
@@ -6,11 +8,11 @@ export const tractorPermission: preHandlerHookHandler = (
   done
 ) => {
   if (!request.session) {
-    return reply.status(401).send({ error: 'Unauthorized' })
+    return sendError(reply, HTTP_STATUS.UNAUTHORIZED, 'Unauthorized')
   }
 
   if (request.session.user.role !== 'user') {
-    return reply.status(403).send({ error: 'Forbidden' })
+    return sendError(reply, HTTP_STATUS.FORBIDDEN, 'Forbidden')
   }
 
   done()

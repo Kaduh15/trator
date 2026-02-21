@@ -1,5 +1,7 @@
 import { auth } from '@trator/auth'
 import type { preHandlerAsyncHookHandler } from 'fastify'
+import { sendError } from '@/utils/http-error'
+import { HTTP_STATUS } from '@/utils/http-status'
 
 export const checkSession: preHandlerAsyncHookHandler = async (
   request,
@@ -9,10 +11,8 @@ export const checkSession: preHandlerAsyncHookHandler = async (
     headers: request.headers,
   })
 
-  console.log('🚀 ~ checkSession ~ request.body:', request.body)
-
   if (!session) {
-    return reply.status(401).send({ error: 'Unauthorized' })
+    return sendError(reply, HTTP_STATUS.UNAUTHORIZED, 'Unauthorized')
   }
 
   request.session = session
