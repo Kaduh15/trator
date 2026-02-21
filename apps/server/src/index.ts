@@ -1,63 +1,10 @@
-import fastifyCors from '@fastify/cors'
-import { auth } from '@trator/auth'
-import { env } from '@trator/env/server'
-import Fastify from 'fastify'
+import { buildApp } from './app'
 
-const baseCorsConfig = {
-  origin: env.CORS_ORIGIN,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  credentials: true,
-  maxAge: 86_400,
-}
+const app = buildApp()
 
-const fastify = Fastify({
-  logger: true,
-})
-
-fastify.register(fastifyCors, baseCorsConfig)
-
-fastify.route({
-  method: ['GET', 'POST'],
-  url: '/api/auth/*',
-  async handler(request, reply) {
-    try {
-      const url = new URL(request.url, `http://${request.headers.host}`)
-      const headers = new Headers()
-      for (const [key, value] of Object.entries(request.headers)) {
-        if (value) {
-          headers.append(key, value.toString())
-        }
-      }
-      const req = new Request(url.toString(), {
-        method: request.method,
-        headers,
-        body: request.body ? JSON.stringify(request.body) : undefined,
-      })
-      const response = await auth.handler(req)
-      reply.status(response.status)
-      for (const [key, value] of response.headers.entries()) {
-        reply.header(key, value)
-      }
-      reply.send(response.body ? await response.text() : null)
-    } catch (error) {
-      fastify.log.error({ err: error }, 'Authentication Error:')
-      reply.status(500).send({
-        error: 'Internal authentication error',
-        code: 'AUTH_FAILURE',
-      })
-    }
-  },
-})
-
-fastify.get('/', () => {
-  return 'OK'
-})
-
-fastify.listen({ port: 3000 }, (err) => {
+app.listen({ port: 3000, host: '0.0.0.0' }, (err) => {
   if (err) {
-    fastify.log.error(err)
+    app.log.error(err)
     process.exit(1)
   }
-  console.log('Server running on port 3000')
 })
