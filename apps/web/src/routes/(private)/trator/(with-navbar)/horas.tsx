@@ -4,8 +4,8 @@ import {
   ChevronRightIcon,
   ClockIcon,
   DollarSignIcon,
-  LogOutIcon,
 } from 'lucide-react'
+import { ButtonLogout } from '@/components/button-logout'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -59,9 +59,7 @@ function RouteComponent() {
           </p>
           <h1 className="font-semibold text-lg">Minhas Horas</h1>
         </div>
-        <Button aria-label="Sair" size="icon" type="button" variant="ghost">
-          <LogOutIcon className="size-4" />
-        </Button>
+        <ButtonLogout />
       </header>
 
       <main className="space-y-6 px-4 py-6">

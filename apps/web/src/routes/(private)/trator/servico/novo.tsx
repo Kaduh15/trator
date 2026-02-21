@@ -1,7 +1,8 @@
 import { useForm } from '@tanstack/react-form'
 import { createFileRoute } from '@tanstack/react-router'
-import { ChevronLeftIcon, LogOutIcon, PlusIcon } from 'lucide-react'
+import { ChevronLeftIcon, PlusIcon } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { ButtonLogout } from '@/components/button-logout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -160,9 +161,7 @@ function RouteComponent() {
             <h1 className="font-semibold text-lg">Novo Servico</h1>
           </div>
         </div>
-        <Button aria-label="Sair" size="icon" type="button" variant="ghost">
-          <LogOutIcon className="size-4" />
-        </Button>
+        <ButtonLogout />
       </header>
 
       <main className="flex flex-1 flex-col gap-4 px-4 py-4 pb-20">

@@ -1,9 +1,12 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { LogOutIcon, PlusIcon } from 'lucide-react'
+import { PlusIcon } from 'lucide-react'
+import { ButtonLogout } from '@/components/button-logout'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 
-export const Route = createFileRoute('/(private)/trator/(with-navbar)/servicos')({
+export const Route = createFileRoute(
+  '/(private)/trator/(with-navbar)/servicos'
+)({
   component: RouteComponent,
 })
 
@@ -19,9 +22,7 @@ function RouteComponent() {
           </p>
           <h1 className="font-semibold text-lg">Meus Serviços</h1>
         </div>
-        <Button aria-label="Sair" size="icon" type="button" variant="ghost">
-          <LogOutIcon className="size-4" />
-        </Button>
+        <ButtonLogout />
       </header>
 
       <main className="mb-16 flex flex-1 flex-col justify-between gap-4">
