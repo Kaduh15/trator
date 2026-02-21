@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm'
-import { date, integer, pgTable, text, uuid } from 'drizzle-orm/pg-core'
+import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { v7 as uuidv7 } from 'uuid'
 import { user } from './auth'
 
@@ -12,10 +12,10 @@ export const rateSetting = pgTable('rate_setting', {
     'client_non_associate_hourly_rate'
   ).notNull(),
   tractorHourlyRate: integer('tractor_hourly_rate').notNull(),
-  createdByUserId: text('created_by_user_id').notNull(),
-  createdAt: date('created_at', {
-    mode: 'date',
-  })
+  createdByUserId: text('created_by_user_id')
+    .references(() => user.id)
+    .notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),
 })

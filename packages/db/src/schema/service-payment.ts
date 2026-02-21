@@ -17,7 +17,9 @@ export const servicePayment = pgTable('service_payment', {
   id: uuid('id')
     .primaryKey()
     .$defaultFn(() => uuidv7()),
-  serviceId: uuid('service_id').notNull(),
+  serviceId: uuid('service_id')
+    .references(() => service.id)
+    .notNull(),
   createdByUserId: text('created_by_user_id').notNull(),
   amountCents: integer('amount_cents').notNull(),
   method: paymentMethod('method').default('pix').notNull(),

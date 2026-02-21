@@ -1,4 +1,4 @@
-import { boolean, date, pgTable, text, uuid } from 'drizzle-orm/pg-core'
+import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { v7 as uuidv7 } from 'uuid'
 
 export const client = pgTable('client', {
@@ -7,13 +7,11 @@ export const client = pgTable('client', {
     .$defaultFn(() => uuidv7()),
   name: text('name').notNull(),
   isAssociated: boolean('is_associated').default(false).notNull(),
-  createdAt: date('created_at', {
-    mode: 'date',
-  })
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
     .defaultNow()
     .notNull(),
   phone: text('phone'),
-  updatedAt: date('updated_at', {
-    mode: 'date',
+  updatedAt: timestamp('updated_at', {
+    withTimezone: true,
   }).$onUpdate(() => new Date()),
 })

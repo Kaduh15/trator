@@ -17,8 +17,12 @@ export const service = pgTable('service', {
   id: uuid('id')
     .primaryKey()
     .$defaultFn(() => uuidv7()),
-  clientId: uuid('client_id').notNull(),
-  tractorUserId: text('tractor_user_id').notNull(),
+  clientId: uuid('client_id')
+    .references(() => client.id)
+    .notNull(),
+  tractorUserId: text('tractor_user_id')
+    .references(() => user.id)
+    .notNull(),
   description: text('description').notNull(),
   status: serviceStatus('status').default('open').notNull(),
   workedMinutes: integer('worked_minutes').default(0).notNull(),
@@ -32,7 +36,6 @@ export const service = pgTable('service', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(
     () => new Date()
   ),
-  finishedAt: timestamp('finished_at', { withTimezone: true }),
 })
 
 export const serviceRelations = relations(service, ({ one }) => ({
