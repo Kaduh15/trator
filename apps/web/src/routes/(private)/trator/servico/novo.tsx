@@ -1,5 +1,7 @@
 import { useForm } from '@tanstack/react-form'
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
+import { env } from '@trator/env/web'
 import { ChevronLeftIcon, PlusIcon } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ButtonLogout } from '@/components/button-logout'
@@ -24,6 +26,7 @@ import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
+import { queryClient } from '@/providers/query-provider'
 
 interface Client {
   id: string
@@ -38,20 +41,36 @@ interface Service {
   id: string
 }
 
-const initialClients: Client[] = [
-  { id: 'client-1', name: 'Fazenda Boa Vista', phone: '(11) 98765-4321' },
-  { id: 'client-2', name: 'Agro Horizonte' },
-  { id: 'client-3', name: 'Santo Campo', phone: '(19) 93322-1100' },
-]
+const getClientQueryOptions = queryOptions({
+  queryKey: ['clients'],
+  queryFn: async () => {
+    const response = await fetch(`${env.VITE_SERVER_URL}/api/clients`, {
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch clients')
+    }
+
+    const data = (await response.json()) as Client[]
+
+    return data
+  },
+})
 
 export const Route = createFileRoute('/(private)/trator/servico/novo')({
   component: RouteComponent,
+  beforeLoad: async () => {
+    await queryClient.ensureQueryData(getClientQueryOptions)
+  },
 })
 
 function RouteComponent() {
   const searchInputRef = useRef<HTMLInputElement | null>(null)
 
-  const [clients, setClients] = useState<Client[]>(initialClients)
+  const { data: clientsData } = useSuspenseQuery(getClientQueryOptions)
+
+  const [clients, setClients] = useState<Client[]>(clientsData)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)

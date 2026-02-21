@@ -3,11 +3,10 @@ import {
   HeadContent,
   Outlet,
 } from '@tanstack/react-router'
-
-import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 
 import '../index.css'
+import { Providers } from '@/providers'
 
 export type RouterAppContext = Record<string, never>
 
@@ -36,17 +35,12 @@ function RootComponent() {
   return (
     <>
       <HeadContent />
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        disableTransitionOnChange
-        storageKey="vite-ui-theme"
-      >
+      <Providers>
         <div className="grid h-svh grid-rows-[auto_1fr]">
           <Outlet />
         </div>
         <Toaster richColors />
-      </ThemeProvider>
+      </Providers>
     </>
   )
 }
