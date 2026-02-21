@@ -10,7 +10,11 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
+import { createClientsRoute } from './routes/create-client'
+import { createRateSettingsRoute } from './routes/create-rate-settings'
 import { createServiceRoute } from './routes/create-service'
+import { getClientsRoute } from './routes/get-clients'
+import { getRateSettingsRoute } from './routes/get-rate-settings'
 
 const baseCorsConfig = {
   origin: env.CORS_ORIGIN,
@@ -22,6 +26,14 @@ const baseCorsConfig = {
 
 async function registerRoutes(app: ReturnType<typeof buildApp>) {
   await app.register(createServiceRoute, { prefix: '/api' })
+
+  // Client routes
+  await app.register(createClientsRoute, { prefix: '/api' })
+  await app.register(getClientsRoute, { prefix: '/api' })
+
+  // Rate settings routes
+  await app.register(createRateSettingsRoute, { prefix: '/api' })
+  await app.register(getRateSettingsRoute, { prefix: '/api' })
 }
 
 export function buildApp() {
