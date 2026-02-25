@@ -3,10 +3,8 @@ import { Links, Navbar } from '@/components/navbar'
 
 export const Route = createFileRoute('/(private)/(admin)')({
   component: RouteComponent,
-  beforeLoad: async () => {
-    const { requiredUser } = await import('@/lib/required-user')
-
-    const user = await requiredUser()
+  beforeLoad: ({ context }) => {
+    const user = context.user
 
     if (user?.role !== 'admin') {
       throw redirect({

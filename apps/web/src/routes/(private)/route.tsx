@@ -10,6 +10,8 @@ export const Route = createFileRoute('/(private)')({
         to: '/login',
       })
     }
+
+    return { user }
   },
 })
 
