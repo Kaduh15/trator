@@ -36,7 +36,7 @@ function RootComponent() {
     <>
       <HeadContent />
       <Providers>
-        <div className="grid h-svh grid-rows-[auto_1fr]">
+        <div className="min-h-dvh w-screen transition-all">
           <Outlet />
         </div>
         <Toaster richColors />
