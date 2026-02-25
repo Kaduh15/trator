@@ -1,4 +1,4 @@
-import fastifyCors from '@fastify/cors'
+import fastifyCors, { type FastifyCorsOptions } from '@fastify/cors'
 import fastifySwagger from '@fastify/swagger'
 import scalarReference from '@scalar/fastify-api-reference'
 import { auth } from '@trator/auth'
@@ -15,8 +15,10 @@ import { createRateSettingsRoute } from './routes/create-rate-settings'
 import { createServiceRoute } from './routes/create-service'
 import { getClientsRoute } from './routes/get-clients'
 import { getRateSettingsRoute } from './routes/get-rate-settings'
+import { getServicesRoute } from './routes/get-services'
+import { updateServiceRoute } from './routes/update-service'
 
-const baseCorsConfig = {
+const baseCorsConfig: FastifyCorsOptions = {
   origin: env.CORS_ORIGIN,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -25,7 +27,10 @@ const baseCorsConfig = {
 }
 
 async function registerRoutes(app: ReturnType<typeof buildApp>) {
+  // services
   await app.register(createServiceRoute, { prefix: '/api' })
+  await app.register(getServicesRoute, { prefix: '/api' })
+  await app.register(updateServiceRoute, { prefix: '/api' })
 
   // Client routes
   await app.register(createClientsRoute, { prefix: '/api' })
