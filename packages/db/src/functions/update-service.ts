@@ -43,6 +43,7 @@ export const updateServiceDB = async (input: UpdateServiceInput) => {
           (data.workedMinutes / 60) *
             (serviceResult.tractorHourlyRateCents / 100)
         ) * 100,
+      finishedAt: new Date(),
     })
     .where(eq(service.id, data.serviceId))
     .returning()

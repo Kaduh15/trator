@@ -30,6 +30,7 @@ export const service = pgTable('service', {
   tractorHourlyRateCents: integer('tractor_hourly_rate_cents').notNull(),
   totalClientCents: integer('total_client_cents').default(0),
   totalTractorCents: integer('total_tractor_cents').default(0),
+  finishedAt: timestamp('finished_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),
