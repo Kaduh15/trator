@@ -53,16 +53,18 @@ function RouteComponent() {
         workedMinutes: workedMinutesNumber,
       },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
           setServiceSelect(null)
           setWorkedMinutes('00:00')
+
+          await queryClient.invalidateQueries({ queryKey: ['tractor-me'] })
         },
       }
     )
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col">
       <header className="flex items-center justify-between border-b bg-background px-4 py-3">
         <div>
           <p className="text-muted-foreground text-xs uppercase tracking-wide">
@@ -77,7 +79,7 @@ function RouteComponent() {
         {/* Lista de serviços */}
         <section className="flex-1 p-4">
           <p className="font-medium text-sm">Serviços: {quantityServices}</p>
-          <ul className="mt-4 space-y-2 scroll-auto">
+          <ul className="scroll-y mt-4 space-y-2 scroll-auto">
             {servicesOpen.map((service) => (
               <li
                 className="border p-4 transition-all data-[selected=true]:border-primary"
@@ -146,17 +148,18 @@ function RouteComponent() {
           </ul>
         </section>
 
-        <Separator orientation="horizontal" />
+        <div className="fixed bottom-14 w-screen space-y-2 bg-background pb-4">
+          <Separator orientation="horizontal" />
 
-        {/* Botão para criar um novo serviço */}
-
-        <Link
-          className="mx-2 flex items-center justify-center gap-2 bg-primary py-2 text-white"
-          to="/trator/servico/novo"
-        >
-          <PlusIcon className="size-4" />
-          Criar Novo Serviço
-        </Link>
+          {/* Botão para criar um novo serviço */}
+          <Link
+            className="mx-2 flex items-center justify-center gap-2 bg-primary py-2 text-white"
+            to="/trator/servico/novo"
+          >
+            <PlusIcon className="size-4" />
+            Criar Novo Serviço
+          </Link>
+        </div>
       </main>
     </div>
   )

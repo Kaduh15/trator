@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import {
   ChevronLeftIcon,
@@ -5,17 +6,25 @@ import {
   ClockIcon,
   DollarSignIcon,
 } from 'lucide-react'
+import { useState } from 'react'
 import { ButtonLogout } from '@/components/button-logout'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { getTractorMe } from '@/http/queries/tractor'
+import { queryClient } from '@/providers/query-provider'
 
 export const Route = createFileRoute('/(private)/trator/(with-navbar)/horas')({
   component: RouteComponent,
+  loader: async () => {
+    await queryClient.ensureQueryData(getTractorMe())
+  },
 })
 
 function RouteComponent() {
-  const isFilterMonth = true
+  const { data } = useSuspenseQuery(getTractorMe())
+
+  const [isFilterMonth, setIsFilterMonth] = useState(true)
   const selectedPeriodLabel = 'Junho 2024'
 
   const summaryCards = [
@@ -23,36 +32,41 @@ function RouteComponent() {
       id: 'total-hours',
       icon: ClockIcon,
       label: 'Total de Horas',
-      value: '6h 30min',
+      value: `${Math.floor(data.totalWorkedMinutes / 60)}h ${data.totalWorkedMinutes % 60}min`,
       valueClassName: 'text-base',
     },
     {
       id: 'estimated-earnings',
       icon: DollarSignIcon,
       label: 'Ganhos Estimados',
-      value: 'R$ 600,00',
+      value: (data.totalTractorCents / 100).toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }),
       valueClassName: 'text-base text-primary',
     },
   ] as const
 
-  const dailyEntries = [
-    {
-      id: '2024-02-17',
-      label: 'Ter 17/02',
-      hours: '2h 30min',
-      earnings: 'R$ 250,00',
-    },
-    {
-      id: '2024-02-18',
-      label: 'Qua 18/02',
-      hours: '2h 30min',
-      earnings: 'R$ 250,00',
-    },
-  ] as const
+  const dailyEntries = data.weeks.map((week, index) => {
+    return {
+      id: week.weekStartDate,
+      label: `Semana ${index + 1} (${new Date(
+        week.weekStartDate
+      ).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+      })})`,
+      hours: `${Math.floor(week.workedMinutes / 60)}h ${week.workedMinutes % 60}min`,
+      earnings: (week.tractorCents / 100).toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }),
+    }
+  })
 
   return (
-    <div className="min-h-dvh bg-background">
-      <header className="flex items-center justify-between border-b bg-background px-4 py-3">
+    <div className="">
+      <header className="flex items-center justify-between border-b px-4 py-3">
         <div>
           <p className="text-muted-foreground text-xs uppercase tracking-wide">
             Trator
@@ -67,6 +81,7 @@ function RouteComponent() {
           <ButtonGroup className="w-full">
             <Button
               className="flex-1"
+              onClick={() => setIsFilterMonth(false)}
               variant={isFilterMonth ? 'outline' : 'default'}
             >
               Semana
@@ -74,6 +89,7 @@ function RouteComponent() {
             <ButtonGroupSeparator />
             <Button
               className="flex-1"
+              onClick={() => setIsFilterMonth(true)}
               variant={isFilterMonth ? 'default' : 'outline'}
             >
               Mês
