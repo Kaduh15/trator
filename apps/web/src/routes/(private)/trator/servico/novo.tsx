@@ -1,9 +1,9 @@
-import { useForm } from '@tanstack/react-form'
-import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
+import { useForm, useStore } from '@tanstack/react-form'
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import { env } from '@trator/env/web'
 import { ChevronLeftIcon, PlusIcon } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Activity, useEffect, useMemo, useRef, useState } from 'react'
+import { toast } from 'sonner'
 import { ButtonLogout } from '@/components/button-logout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -23,63 +23,44 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
+import type { Client } from '@/http/queries/client'
+import {
+  createClientQueryOptions,
+  getClientsQueryOptions,
+} from '@/http/queries/client'
+import { createServiceMutationOptions } from '@/http/queries/service'
 import { queryClient } from '@/providers/query-provider'
-
-interface Client {
-  id: string
-  name: string
-  phone?: string
-}
-
-interface Service {
-  clientId: string
-  createdAt: Date
-  description: string
-  id: string
-}
-
-const getClientQueryOptions = queryOptions({
-  queryKey: ['clients'],
-  queryFn: async () => {
-    const response = await fetch(`${env.VITE_SERVER_URL}/api/clients`, {
-      credentials: 'include',
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch clients')
-    }
-
-    const data = (await response.json()) as Client[]
-
-    return data
-  },
-})
 
 export const Route = createFileRoute('/(private)/trator/servico/novo')({
   component: RouteComponent,
   beforeLoad: async () => {
-    await queryClient.ensureQueryData(getClientQueryOptions)
+    await queryClient.ensureQueryData(getClientsQueryOptions())
   },
 })
 
 function RouteComponent() {
   const searchInputRef = useRef<HTMLInputElement | null>(null)
+  const navigate = Route.useNavigate()
 
-  const { data: clientsData } = useSuspenseQuery(getClientQueryOptions)
+  const { data: clients } = useSuspenseQuery(getClientsQueryOptions())
 
-  const [clients, setClients] = useState<Client[]>(clientsData)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isCreatingClient, setIsCreatingClient] = useState(false)
-  const [newClientName, setNewClientName] = useState('')
-  const [newClientPhone, setNewClientPhone] = useState('')
-  const [newClientError, setNewClientError] = useState('')
-  const [services, setServices] = useState<Service[]>([])
-  const [submitMessage, setSubmitMessage] = useState('')
+
+  const formNewClient = useForm({
+    defaultValues: {
+      name: '',
+      phone: '',
+    },
+  })
+
+  const { mutate: createClient } = useMutation(createClientQueryOptions())
+
+  const { mutate: createService } = useMutation(createServiceMutationOptions())
 
   const form = useForm({
     defaultValues: {
@@ -90,21 +71,23 @@ function RouteComponent() {
         return
       }
 
-      const service: Service = {
-        id: crypto.randomUUID(),
-        clientId: selectedClient.id,
-        description: value.description.trim(),
-        createdAt: new Date(),
-      }
-
-      setServices((prevServices) => [service, ...prevServices])
-      form.setFieldValue('description', '')
-      setSubmitMessage('Servico criado com sucesso.')
-
-      window.setTimeout(() => {
-        setSubmitMessage('')
-      }, 2500)
+      createService(
+        {
+          description: value.description.trim(),
+          clientId: selectedClient.id,
+        },
+        {
+          onSuccess: () =>
+            navigate({
+              to: '/trator/servicos',
+            }),
+        }
+      )
     },
+  })
+
+  const isValidCreateService = useStore(form.store, (state) => {
+    return state.isFormValid && selectedClient !== null
   })
 
   const filteredClients = useMemo(() => {
@@ -131,33 +114,29 @@ function RouteComponent() {
     return () => cancelAnimationFrame(frame)
   }, [isModalOpen])
 
-  const isCreateServiceDisabled =
-    !selectedClient || form.state.values.description.trim().length === 0
-
   const handleSelectClient = (client: Client) => {
     setSelectedClient(client)
     setIsModalOpen(false)
     setSearchTerm('')
     setIsCreatingClient(false)
-    setNewClientName('')
-    setNewClientPhone('')
-    setNewClientError('')
+    formNewClient.resetField('name')
+    formNewClient.resetField('phone')
   }
 
   const handleCreateClient = () => {
-    if (newClientName.trim().length === 0) {
-      setNewClientError('O nome do cliente e obrigatório.')
+    if (formNewClient.state.values.name.trim().length === 0) {
+      toast.error('O nome do cliente e obrigatório.')
       return
     }
 
     const newClient: Client = {
       id: crypto.randomUUID(),
-      name: newClientName.trim(),
-      phone: newClientPhone.trim() || undefined,
+      name: formNewClient.state.values.name.trim(),
+      phone: formNewClient.state.values.phone.trim() || undefined,
     }
 
-    setClients((prevClients) => [newClient, ...prevClients])
     handleSelectClient(newClient)
+    createClient(newClient)
   }
 
   return (
@@ -166,7 +145,11 @@ function RouteComponent() {
         <div className="flex items-center gap-2">
           <Button
             aria-label="Voltar"
-            onClick={() => window.history.back()}
+            onClick={() =>
+              navigate({
+                to: '/trator/servicos',
+              })
+            }
             size="icon"
             type="button"
             variant="ghost"
@@ -177,7 +160,7 @@ function RouteComponent() {
             <p className="text-muted-foreground text-xs uppercase tracking-wide">
               Trator
             </p>
-            <h1 className="font-semibold text-lg">Novo Servico</h1>
+            <h1 className="font-semibold text-lg">Novo Serviço</h1>
           </div>
         </div>
         <ButtonLogout />
@@ -186,7 +169,7 @@ function RouteComponent() {
       <main className="flex flex-1 flex-col gap-4 px-4 py-4 pb-20">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Dados do servico</CardTitle>
+            <CardTitle className="text-base">Dados do serviço</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -210,13 +193,13 @@ function RouteComponent() {
               <form.Field name="description">
                 {(field) => (
                   <div className="space-y-2">
-                    <Label htmlFor={field.name}>Descricao do servico</Label>
+                    <Label htmlFor={field.name}>Descrição do serviço</Label>
                     <Textarea
                       id={field.name}
-                      onChange={(event) =>
-                        field.handleChange(event.target.value)
-                      }
-                      placeholder="Descreva o servico prestado"
+                      name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="Descreva o serviço prestado"
                       rows={5}
                       value={field.state.value}
                     />
@@ -227,24 +210,12 @@ function RouteComponent() {
           </CardContent>
         </Card>
 
-        {submitMessage ? (
-          <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-700 text-sm">
-            {submitMessage}
-          </p>
-        ) : null}
-
-        {services.length > 0 ? (
-          <p className="text-muted-foreground text-xs">
-            Servicos criados: {services.length}
-          </p>
-        ) : null}
-
         <Button
           className="w-full"
-          disabled={isCreateServiceDisabled}
+          disabled={!isValidCreateService}
           onClick={() => form.handleSubmit()}
         >
-          Criar servico
+          Criar serviço
         </Button>
       </main>
 
@@ -264,26 +235,22 @@ function RouteComponent() {
             <CommandList>
               <CommandEmpty>Nenhum cliente encontrado.</CommandEmpty>
               <CommandGroup heading="Clientes">
-                <ScrollArea className="max-h-60">
-                  {filteredClients.map((client) => (
-                    <CommandItem
-                      key={client.id}
-                      onSelect={() => handleSelectClient(client)}
-                      value={client.name}
-                    >
-                      <div className="flex flex-col">
-                        <span className="font-medium text-sm">
-                          {client.name}
+                {filteredClients.map((client) => (
+                  <CommandItem
+                    key={client.id}
+                    onSelect={() => handleSelectClient(client)}
+                    value={client.name}
+                  >
+                    <div className="flex flex-col">
+                      <span className="font-medium text-sm">{client.name}</span>
+                      <Activity mode={client.phone ? 'visible' : 'hidden'}>
+                        <span className="text-muted-foreground text-xs">
+                          {client.phone}
                         </span>
-                        {client.phone ? (
-                          <span className="text-muted-foreground text-xs">
-                            {client.phone}
-                          </span>
-                        ) : null}
-                      </div>
-                    </CommandItem>
-                  ))}
-                </ScrollArea>
+                      </Activity>
+                    </div>
+                  </CommandItem>
+                ))}
               </CommandGroup>
             </CommandList>
           </Command>
@@ -301,37 +268,43 @@ function RouteComponent() {
               Adicionar novo cliente
             </Button>
 
-            {isCreatingClient ? (
+            <Activity mode={isCreatingClient ? 'visible' : 'hidden'}>
               <div className="space-y-3 rounded-lg border p-3">
-                <div className="space-y-2">
-                  <Label htmlFor="new-client-name">Nome do cliente</Label>
-                  <Input
-                    id="new-client-name"
-                    onChange={(event) => {
-                      setNewClientName(event.target.value)
-                      setNewClientError('')
-                    }}
-                    placeholder="Nome do cliente"
-                    value={newClientName}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="new-client-phone">Telefone (opcional)</Label>
-                  <Input
-                    id="new-client-phone"
-                    onChange={(event) => setNewClientPhone(event.target.value)}
-                    placeholder="(00) 00000-0000"
-                    value={newClientPhone}
-                  />
-                </div>
-                {newClientError ? (
-                  <p className="text-destructive text-sm">{newClientError}</p>
-                ) : null}
+                <formNewClient.Field name="name">
+                  {(field) => (
+                    <div className="space-y-2">
+                      <Label htmlFor={field.name}>Nome do cliente</Label>
+                      <Input
+                        id={field.name}
+                        onChange={(event) => {
+                          field.handleChange(event.target.value)
+                        }}
+                        placeholder="Nome do cliente"
+                        value={field.state.value}
+                      />
+                    </div>
+                  )}
+                </formNewClient.Field>
+                <formNewClient.Field name="phone">
+                  {(field) => (
+                    <div className="space-y-2">
+                      <Label htmlFor={field.name}>Telefone (opcional)</Label>
+                      <Input
+                        id={field.name}
+                        onChange={(event) =>
+                          field.handleChange(event.target.value)
+                        }
+                        placeholder="(00) 00000-0000"
+                        value={field.state.value}
+                      />
+                    </div>
+                  )}
+                </formNewClient.Field>
                 <Button className="w-full" onClick={handleCreateClient}>
                   Criar novo cliente
                 </Button>
               </div>
-            ) : null}
+            </Activity>
           </div>
         </DialogContent>
       </Dialog>
