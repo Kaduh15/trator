@@ -16,6 +16,7 @@ import { createServiceRoute } from './routes/create-service'
 import { getClientsRoute } from './routes/get-clients'
 import { getRateSettingsRoute } from './routes/get-rate-settings'
 import { getServicesRoute } from './routes/get-services'
+import { getHoursRoute } from './routes/trator-me'
 import { updateServiceRoute } from './routes/update-service'
 
 const baseCorsConfig: FastifyCorsOptions = {
@@ -39,6 +40,9 @@ async function registerRoutes(app: ReturnType<typeof buildApp>) {
   // Rate settings routes
   await app.register(createRateSettingsRoute, { prefix: '/api' })
   await app.register(getRateSettingsRoute, { prefix: '/api' })
+
+  // tractor
+  await app.register(getHoursRoute, { prefix: '/api' })
 }
 
 export function buildApp() {
