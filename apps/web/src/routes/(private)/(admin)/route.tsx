@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
-import { ClockIcon } from 'lucide-react'
+import { EllipsisIcon, FileTextIcon, LayoutDashboardIcon, WrenchIcon } from 'lucide-react'
 import { Navbar } from '@/components/navbar'
 
 export const Route = createFileRoute('/(private)/(admin)')({
@@ -20,18 +20,27 @@ function RouteComponent() {
     <div className="min-h-screen">
       <Outlet />
       <Navbar
-        className="fixed bottom-0 w-full"
         links={[
           {
-            to: '/trator/horas',
-            label: 'Horas',
-            icon: ClockIcon,
+            to: '/dashboard',
+            label: 'Dashboard',
+            icon: LayoutDashboardIcon,
           },
           {
-            to: '/trator/servicos',
+            to: '/servicos',
             label: 'Serviços',
-            icon: ClockIcon,
+            icon: FileTextIcon,
           },
+          {
+            to: '/despesas',
+            label: 'Despesas',
+            icon: WrenchIcon,
+          },
+          {
+            to: '/mais',
+            label: 'Mais',
+            icon: EllipsisIcon,
+          }
         ]}
       />
     </div>

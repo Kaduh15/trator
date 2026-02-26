@@ -1,25 +1,25 @@
-import z from 'zod'
 import { db } from '..'
 import { client } from '../schema'
-
-export const createClientInputSchema = z.object({
-  name: z.string().min(3),
-  phone: z
-    .string()
-    .regex(/^\+?[1-9]\d{0,14}$/)
-    .optional()
-    .nullable(),
-})
-
-export type CreateClientInput = z.infer<typeof createClientInputSchema>
+import {
+  type CreateClientInput,
+  createClientInputSchema,
+} from '../schemas/client'
 
 export async function createClientDB(input: CreateClientInput) {
+  const parsed = createClientInputSchema.safeParse(input)
+
+  if (!parsed.success) {
+    return [null, parsed.error] as const
+  }
+
+  const { data } = parsed
+
   const [clientResult] = await db
     .insert(client)
     .values([
       {
-        name: input.name,
-        phone: input.phone,
+        name: data.name,
+        phone: data.phone,
       },
     ])
     .returning()

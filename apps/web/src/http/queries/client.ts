@@ -1,13 +1,8 @@
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
+import type { Client, CreateClientInput } from '@trator/db'
 import { toast } from 'sonner'
 import { queryClient } from '@/providers/query-provider'
 import { api } from '../api'
-
-export interface Client {
-  id: string
-  name: string
-  phone?: string
-}
 
 export const getClientsQueryOptions = () =>
   queryOptions({
@@ -22,7 +17,7 @@ export const getClientsQueryOptions = () =>
 export const createClientQueryOptions = () =>
   mutationOptions({
     mutationKey: ['createClient'],
-    mutationFn: async (input: { name: string; phone?: string }) => {
+    mutationFn: async (input: CreateClientInput) => {
       const { data } = await api.post<{ data: Client }>('/api/clients', {
         name: input.name,
         phone: input.phone,

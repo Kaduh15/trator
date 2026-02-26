@@ -1,15 +1,10 @@
 import { desc, eq } from 'drizzle-orm'
-import z from 'zod'
 import { db } from '..'
 import { client, rateSetting, service } from '../schema'
-
-export const createServiceInputSchema = z.object({
-  clientId: z.uuidv7(),
-  description: z.string(),
-  tractorUserId: z.string(),
-})
-
-type CreateServiceInput = z.infer<typeof createServiceInputSchema>
+import {
+  type CreateServiceInput,
+  createServiceInputSchema,
+} from '../schemas/service'
 
 export const createServiceDB = async (input: CreateServiceInput) => {
   const parsed = createServiceInputSchema.safeParse(input)

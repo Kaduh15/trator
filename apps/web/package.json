@@ -19,6 +19,7 @@
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-router": "^1.141.1",
     "@trator/auth": "workspace:*",
+    "@trator/db": "workspace:*",
     "@trator/env": "workspace:*",
     "axios": "^1.13.5",
     "better-auth": "catalog:",

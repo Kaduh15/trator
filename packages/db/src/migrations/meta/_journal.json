@@ -15,6 +15,13 @@
       "when": 1771628978154,
       "tag": "0001_tired_fallen_one",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772108325204,
+      "tag": "0002_colossal_turbo",
+      "breakpoints": true
     }
   ]
 }

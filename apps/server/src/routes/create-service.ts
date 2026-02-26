@@ -1,9 +1,11 @@
 import {
-  createServiceDB,
   createServiceInputSchema,
-} from '@trator/db/functions/create-service'
+  createServiceResponseSchema,
+  dataResponseSchema,
+  errorResponseSchema,
+} from '@trator/db'
+import { createServiceDB } from '@trator/db/functions/create-service'
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
-import z from 'zod'
 import { sendError } from '@/utils/http-error'
 import { HTTP_STATUS } from '@/utils/http-status'
 import { checkSession } from './hooks/check-session'
@@ -18,24 +20,12 @@ export const createServiceRoute: FastifyPluginCallbackZod = (app) => {
         tags: ['Services'],
         body: createServiceInputSchema.omit({ tractorUserId: true }),
         response: {
-          [HTTP_STATUS.CREATED]: z.object({
-            data: createServiceInputSchema.extend({
-              id: z.uuidv7(),
-              clientHourlyRateCents: z.number(),
-              tractorHourlyRateCents: z.number(),
-              createdAt: z.date(),
-              updatedAt: z.date().optional().nullable(),
-            }),
-          }),
-          [HTTP_STATUS.INTERNAL_SERVER_ERROR]: z.object({
-            message: z.string(),
-          }),
-          [HTTP_STATUS.UNAUTHORIZED]: z.object({
-            message: z.string(),
-          }),
-          [HTTP_STATUS.FORBIDDEN]: z.object({
-            message: z.string(),
-          }),
+          [HTTP_STATUS.CREATED]: dataResponseSchema(
+            createServiceResponseSchema
+          ),
+          [HTTP_STATUS.INTERNAL_SERVER_ERROR]: errorResponseSchema,
+          [HTTP_STATUS.UNAUTHORIZED]: errorResponseSchema,
+          [HTTP_STATUS.FORBIDDEN]: errorResponseSchema,
         },
       },
     },

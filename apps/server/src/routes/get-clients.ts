@@ -1,6 +1,10 @@
+import {
+  clientSchema,
+  dataResponseSchema,
+  errorResponseSchema,
+} from '@trator/db'
 import { getClientsDB } from '@trator/db/functions/get-clients'
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
-import z from 'zod'
 import { sendError } from '@/utils/http-error'
 import { HTTP_STATUS } from '@/utils/http-status'
 import { checkSession } from './hooks/check-session'
@@ -13,21 +17,8 @@ export const getClientsRoute: FastifyPluginCallbackZod = (app) => {
       schema: {
         tags: ['Clients'],
         response: {
-          [HTTP_STATUS.OK]: z.object({
-            data: z
-              .object({
-                id: z.uuidv7(),
-                name: z.string(),
-                phone: z.string().optional().nullable(),
-                createdAt: z.date(),
-                updatedAt: z.date().optional().nullable(),
-                isAssociated: z.boolean().default(false),
-              })
-              .array(),
-          }),
-          [HTTP_STATUS.INTERNAL_SERVER_ERROR]: z.object({
-            message: z.string(),
-          }),
+          [HTTP_STATUS.OK]: dataResponseSchema(clientSchema.array()),
+          [HTTP_STATUS.INTERNAL_SERVER_ERROR]: errorResponseSchema,
         },
       },
     },

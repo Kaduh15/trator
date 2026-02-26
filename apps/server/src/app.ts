@@ -14,6 +14,7 @@ import { createClientsRoute } from './routes/create-client'
 import { createRateSettingsRoute } from './routes/create-rate-settings'
 import { createServiceRoute } from './routes/create-service'
 import { getClientsRoute } from './routes/get-clients'
+import { getDashboardRoute } from './routes/get-dashboard'
 import { getRateSettingsRoute } from './routes/get-rate-settings'
 import { getServicesRoute } from './routes/get-services'
 import { getHoursRoute } from './routes/trator-me'
@@ -40,6 +41,9 @@ async function registerRoutes(app: ReturnType<typeof buildApp>) {
   // Rate settings routes
   await app.register(createRateSettingsRoute, { prefix: '/api' })
   await app.register(getRateSettingsRoute, { prefix: '/api' })
+
+  // Dashboard routes
+  await app.register(getDashboardRoute, { prefix: '/api' })
 
   // tractor
   await app.register(getHoursRoute, { prefix: '/api' })

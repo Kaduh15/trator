@@ -1,32 +1,35 @@
 import {
+  dashboardQuerySchema,
+  dashboardSummarySchema,
   dataResponseSchema,
   errorResponseSchema,
-  rateSettingsSchema,
 } from '@trator/db'
-import { getRateSettingsDB } from '@trator/db/functions/get-rate-settings'
+import { getDashboardDB } from '@trator/db/functions/get-dashboard'
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
 import { sendError } from '@/utils/http-error'
 import { HTTP_STATUS } from '@/utils/http-status'
 import { adminPermission } from './hooks/admin-permission'
 import { checkSession } from './hooks/check-session'
 
-export const getRateSettingsRoute: FastifyPluginCallbackZod = (app) => {
+export const getDashboardRoute: FastifyPluginCallbackZod = (app) => {
   app.get(
-    '/rate-settings',
+    '/dashboard',
     {
       preHandler: [checkSession, adminPermission],
       schema: {
-        tags: ['RateSettings'],
+        tags: ['Dashboard'],
+        querystring: dashboardQuerySchema,
         response: {
-          [HTTP_STATUS.OK]: dataResponseSchema(rateSettingsSchema),
+          [HTTP_STATUS.OK]: dataResponseSchema(dashboardSummarySchema),
+          [HTTP_STATUS.INTERNAL_SERVER_ERROR]: errorResponseSchema,
           [HTTP_STATUS.UNAUTHORIZED]: errorResponseSchema,
           [HTTP_STATUS.FORBIDDEN]: errorResponseSchema,
-          [HTTP_STATUS.INTERNAL_SERVER_ERROR]: errorResponseSchema,
         },
       },
     },
-    async (_request, reply) => {
-      const [data, error] = await getRateSettingsDB()
+    async (request, reply) => {
+      const { month } = request.query
+      const [data, error] = await getDashboardDB({ month })
 
       if (error) {
         sendError(reply, HTTP_STATUS.INTERNAL_SERVER_ERROR, error.message)

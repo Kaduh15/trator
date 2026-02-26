@@ -14,11 +14,15 @@ import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as privateTratorRouteRouteImport } from './routes/(private)/trator/route'
 import { Route as privateadminRouteRouteImport } from './routes/(private)/(admin)/route'
+import { Route as privateadminMaisRouteImport } from './routes/(private)/(admin)/mais'
+import { Route as privateadminDespesasRouteImport } from './routes/(private)/(admin)/despesas'
 import { Route as privateadminDashboardRouteImport } from './routes/(private)/(admin)/dashboard'
 import { Route as privateTratorwithNavbarRouteRouteImport } from './routes/(private)/trator/(with-navbar)/route'
+import { Route as privateadminServicosIndexRouteImport } from './routes/(private)/(admin)/servicos/index'
 import { Route as privateTratorServicoNovoRouteImport } from './routes/(private)/trator/servico/novo'
 import { Route as privateTratorwithNavbarServicosRouteImport } from './routes/(private)/trator/(with-navbar)/servicos'
 import { Route as privateTratorwithNavbarHorasRouteImport } from './routes/(private)/trator/(with-navbar)/horas'
+import { Route as privateadminServicosIdPagamentoRouteImport } from './routes/(private)/(admin)/servicos/$id/pagamento'
 
 const privateRouteRoute = privateRouteRouteImport.update({
   id: '/(private)',
@@ -42,6 +46,16 @@ const privateadminRouteRoute = privateadminRouteRouteImport.update({
   id: '/(admin)',
   getParentRoute: () => privateRouteRoute,
 } as any)
+const privateadminMaisRoute = privateadminMaisRouteImport.update({
+  id: '/mais',
+  path: '/mais',
+  getParentRoute: () => privateadminRouteRoute,
+} as any)
+const privateadminDespesasRoute = privateadminDespesasRouteImport.update({
+  id: '/despesas',
+  path: '/despesas',
+  getParentRoute: () => privateadminRouteRoute,
+} as any)
 const privateadminDashboardRoute = privateadminDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -51,6 +65,12 @@ const privateTratorwithNavbarRouteRoute =
   privateTratorwithNavbarRouteRouteImport.update({
     id: '/(with-navbar)',
     getParentRoute: () => privateTratorRouteRoute,
+  } as any)
+const privateadminServicosIndexRoute =
+  privateadminServicosIndexRouteImport.update({
+    id: '/servicos/',
+    path: '/servicos/',
+    getParentRoute: () => privateadminRouteRoute,
   } as any)
 const privateTratorServicoNovoRoute =
   privateTratorServicoNovoRouteImport.update({
@@ -70,22 +90,36 @@ const privateTratorwithNavbarHorasRoute =
     path: '/horas',
     getParentRoute: () => privateTratorwithNavbarRouteRoute,
   } as any)
+const privateadminServicosIdPagamentoRoute =
+  privateadminServicosIdPagamentoRouteImport.update({
+    id: '/servicos/$id/pagamento',
+    path: '/servicos/$id/pagamento',
+    getParentRoute: () => privateadminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/trator': typeof privateTratorwithNavbarRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/dashboard': typeof privateadminDashboardRoute
+  '/despesas': typeof privateadminDespesasRoute
+  '/mais': typeof privateadminMaisRoute
   '/trator/horas': typeof privateTratorwithNavbarHorasRoute
   '/trator/servicos': typeof privateTratorwithNavbarServicosRoute
   '/trator/servico/novo': typeof privateTratorServicoNovoRoute
+  '/servicos/': typeof privateadminServicosIndexRoute
+  '/servicos/$id/pagamento': typeof privateadminServicosIdPagamentoRoute
 }
 export interface FileRoutesByTo {
   '/trator': typeof privateTratorwithNavbarRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/dashboard': typeof privateadminDashboardRoute
+  '/despesas': typeof privateadminDespesasRoute
+  '/mais': typeof privateadminMaisRoute
   '/trator/horas': typeof privateTratorwithNavbarHorasRoute
   '/trator/servicos': typeof privateTratorwithNavbarServicosRoute
   '/trator/servico/novo': typeof privateTratorServicoNovoRoute
+  '/servicos': typeof privateadminServicosIndexRoute
+  '/servicos/$id/pagamento': typeof privateadminServicosIdPagamentoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -96,9 +130,13 @@ export interface FileRoutesById {
   '/(auth)/login': typeof authLoginRoute
   '/(private)/trator/(with-navbar)': typeof privateTratorwithNavbarRouteRouteWithChildren
   '/(private)/(admin)/dashboard': typeof privateadminDashboardRoute
+  '/(private)/(admin)/despesas': typeof privateadminDespesasRoute
+  '/(private)/(admin)/mais': typeof privateadminMaisRoute
   '/(private)/trator/(with-navbar)/horas': typeof privateTratorwithNavbarHorasRoute
   '/(private)/trator/(with-navbar)/servicos': typeof privateTratorwithNavbarServicosRoute
   '/(private)/trator/servico/novo': typeof privateTratorServicoNovoRoute
+  '/(private)/(admin)/servicos/': typeof privateadminServicosIndexRoute
+  '/(private)/(admin)/servicos/$id/pagamento': typeof privateadminServicosIdPagamentoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -106,17 +144,25 @@ export interface FileRouteTypes {
     | '/trator'
     | '/login'
     | '/dashboard'
+    | '/despesas'
+    | '/mais'
     | '/trator/horas'
     | '/trator/servicos'
     | '/trator/servico/novo'
+    | '/servicos/'
+    | '/servicos/$id/pagamento'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/trator'
     | '/login'
     | '/dashboard'
+    | '/despesas'
+    | '/mais'
     | '/trator/horas'
     | '/trator/servicos'
     | '/trator/servico/novo'
+    | '/servicos'
+    | '/servicos/$id/pagamento'
   id:
     | '__root__'
     | '/(auth)'
@@ -126,9 +172,13 @@ export interface FileRouteTypes {
     | '/(auth)/login'
     | '/(private)/trator/(with-navbar)'
     | '/(private)/(admin)/dashboard'
+    | '/(private)/(admin)/despesas'
+    | '/(private)/(admin)/mais'
     | '/(private)/trator/(with-navbar)/horas'
     | '/(private)/trator/(with-navbar)/servicos'
     | '/(private)/trator/servico/novo'
+    | '/(private)/(admin)/servicos/'
+    | '/(private)/(admin)/servicos/$id/pagamento'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -173,6 +223,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof privateadminRouteRouteImport
       parentRoute: typeof privateRouteRoute
     }
+    '/(private)/(admin)/mais': {
+      id: '/(private)/(admin)/mais'
+      path: '/mais'
+      fullPath: '/mais'
+      preLoaderRoute: typeof privateadminMaisRouteImport
+      parentRoute: typeof privateadminRouteRoute
+    }
+    '/(private)/(admin)/despesas': {
+      id: '/(private)/(admin)/despesas'
+      path: '/despesas'
+      fullPath: '/despesas'
+      preLoaderRoute: typeof privateadminDespesasRouteImport
+      parentRoute: typeof privateadminRouteRoute
+    }
     '/(private)/(admin)/dashboard': {
       id: '/(private)/(admin)/dashboard'
       path: '/dashboard'
@@ -186,6 +250,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/trator'
       preLoaderRoute: typeof privateTratorwithNavbarRouteRouteImport
       parentRoute: typeof privateTratorRouteRoute
+    }
+    '/(private)/(admin)/servicos/': {
+      id: '/(private)/(admin)/servicos/'
+      path: '/servicos'
+      fullPath: '/servicos/'
+      preLoaderRoute: typeof privateadminServicosIndexRouteImport
+      parentRoute: typeof privateadminRouteRoute
     }
     '/(private)/trator/servico/novo': {
       id: '/(private)/trator/servico/novo'
@@ -208,6 +279,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof privateTratorwithNavbarHorasRouteImport
       parentRoute: typeof privateTratorwithNavbarRouteRoute
     }
+    '/(private)/(admin)/servicos/$id/pagamento': {
+      id: '/(private)/(admin)/servicos/$id/pagamento'
+      path: '/servicos/$id/pagamento'
+      fullPath: '/servicos/$id/pagamento'
+      preLoaderRoute: typeof privateadminServicosIdPagamentoRouteImport
+      parentRoute: typeof privateadminRouteRoute
+    }
   }
 }
 
@@ -225,10 +303,18 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface privateadminRouteRouteChildren {
   privateadminDashboardRoute: typeof privateadminDashboardRoute
+  privateadminDespesasRoute: typeof privateadminDespesasRoute
+  privateadminMaisRoute: typeof privateadminMaisRoute
+  privateadminServicosIndexRoute: typeof privateadminServicosIndexRoute
+  privateadminServicosIdPagamentoRoute: typeof privateadminServicosIdPagamentoRoute
 }
 
 const privateadminRouteRouteChildren: privateadminRouteRouteChildren = {
   privateadminDashboardRoute: privateadminDashboardRoute,
+  privateadminDespesasRoute: privateadminDespesasRoute,
+  privateadminMaisRoute: privateadminMaisRoute,
+  privateadminServicosIndexRoute: privateadminServicosIndexRoute,
+  privateadminServicosIdPagamentoRoute: privateadminServicosIdPagamentoRoute,
 }
 
 const privateadminRouteRouteWithChildren =

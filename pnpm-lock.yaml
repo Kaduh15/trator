@@ -139,6 +139,9 @@ importers:
       '@trator/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@trator/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@trator/env':
         specifier: workspace:*
         version: link:../../packages/env

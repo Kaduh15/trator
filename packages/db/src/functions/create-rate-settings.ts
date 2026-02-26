@@ -1,27 +1,27 @@
-import z from 'zod'
 import { db } from '..'
 import { rateSetting } from '../schema'
-
-export const createRateSettingsInputSchema = z.object({
-  clientAssociateHourlyRate: z.number().positive(),
-  clientNonAssociateHourlyRate: z.number().positive(),
-  tractorHourlyRate: z.number().positive(),
-  createdByUserId: z.string(),
-})
-
-export type CreateRateSettingsInput = z.infer<
-  typeof createRateSettingsInputSchema
->
+import {
+  type CreateRateSettingsInput,
+  createRateSettingsInputSchema,
+} from '../schemas/rate-settings'
 
 export async function createRateSettingsDB(input: CreateRateSettingsInput) {
+  const parsed = createRateSettingsInputSchema.safeParse(input)
+
+  if (!parsed.success) {
+    return [null, parsed.error] as const
+  }
+
+  const { data } = parsed
+
   const [rateSettingsResult] = await db
     .insert(rateSetting)
     .values([
       {
-        clientAssociateHourlyRate: input.clientAssociateHourlyRate,
-        clientNonAssociateHourlyRate: input.clientNonAssociateHourlyRate,
-        tractorHourlyRate: input.tractorHourlyRate,
-        createdByUserId: input.createdByUserId,
+        clientAssociateHourlyRate: data.clientAssociateHourlyRate,
+        clientNonAssociateHourlyRate: data.clientNonAssociateHourlyRate,
+        tractorHourlyRate: data.tractorHourlyRate,
+        createdByUserId: data.createdByUserId,
       },
     ])
     .returning()

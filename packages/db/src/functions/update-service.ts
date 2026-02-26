@@ -1,14 +1,10 @@
 import { eq } from 'drizzle-orm'
-import z from 'zod'
 import { db } from '..'
 import { service } from '../schema'
-
-export const updateServiceInputSchema = z.object({
-  serviceId: z.uuidv7(),
-  workedMinutes: z.number(),
-})
-
-type UpdateServiceInput = z.infer<typeof updateServiceInputSchema>
+import {
+  type UpdateServiceInput,
+  updateServiceInputSchema,
+} from '../schemas/service'
 
 export const updateServiceDB = async (input: UpdateServiceInput) => {
   const parsed = updateServiceInputSchema.safeParse(input)

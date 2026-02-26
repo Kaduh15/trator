@@ -25,13 +25,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
-import type { Client } from '@/http/queries/client'
 import {
   createClientQueryOptions,
   getClientsQueryOptions,
 } from '@/http/queries/client'
 import { createServiceMutationOptions } from '@/http/queries/service'
 import { queryClient } from '@/providers/query-provider'
+import type { Client } from '@trator/db'
 
 export const Route = createFileRoute('/(private)/trator/servico/novo')({
   component: RouteComponent,
@@ -125,18 +125,21 @@ function RouteComponent() {
 
   const handleCreateClient = () => {
     if (formNewClient.state.values.name.trim().length === 0) {
-      toast.error('O nome do cliente e obrigatório.')
+      toast.error('O nome do cliente é obrigatório.')
       return
     }
 
-    const newClient: Client = {
-      id: crypto.randomUUID(),
-      name: formNewClient.state.values.name.trim(),
-      phone: formNewClient.state.values.phone.trim() || undefined,
-    }
-
-    handleSelectClient(newClient)
-    createClient(newClient)
+    createClient(
+      {
+        name: formNewClient.state.values.name.trim(),
+        phone: formNewClient.state.values.phone.trim() || undefined,
+      },
+      {
+        onSuccess: (client) => {
+          handleSelectClient(client)
+        },
+      }
+    )
   }
 
   return (

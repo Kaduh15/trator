@@ -1,20 +1,22 @@
-import { Link } from '@tanstack/react-router'
+import { Link, type LinkComponentProps } from '@tanstack/react-router'
 import type { LucideIcon } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
 import { cn } from '@/lib/utils'
 
 type NavbarProps = {
-  links: {
-    to: string
+  links: ({
     label: string
     icon: LucideIcon
-  }[]
+  } & LinkComponentProps)[]
 } & PropsWithChildren &
   React.HTMLAttributes<HTMLElement>
 
 export function Navbar({ links, className, ...props }: NavbarProps) {
   return (
-    <nav className={cn('fixed bottom-0 bg-background', className)} {...props}>
+    <nav
+      className={cn('fixed bottom-0 border-t-2 bg-background', className)}
+      {...props}
+    >
       <ul className="flex w-screen">
         {links.map((link) => (
           <li className="flex-1" key={link.to}>

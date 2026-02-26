@@ -65,7 +65,7 @@ function RouteComponent() {
   })
 
   return (
-    <div className="">
+    <div>
       <header className="flex items-center justify-between border-b px-4 py-3">
         <div>
           <p className="text-muted-foreground text-xs uppercase tracking-wide">
@@ -126,7 +126,9 @@ function RouteComponent() {
         </section>
 
         <section className="space-y-3">
-          <p className="font-medium text-sm">Por dia</p>
+          <p className="font-medium text-sm">
+            Por {isFilterMonth ? 'semana' : 'dia'}
+          </p>
           <div className="space-y-2">
             {dailyEntries.map((entry) => (
               <Card key={entry.id}>
