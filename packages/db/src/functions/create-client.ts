@@ -1,12 +1,16 @@
 import { db } from '..'
 import { client } from '../schema'
+import type { AsyncReturnFunction } from '../types/function-db'
 import {
+  type Client,
   type CreateClientInput,
-  createClientInputSchema,
-} from '../schemas/client'
+  createClientSchema,
+} from '../validators/client'
 
-export async function createClientDB(input: CreateClientInput) {
-  const parsed = createClientInputSchema.safeParse(input)
+export async function createClientDB(
+  input: CreateClientInput
+): AsyncReturnFunction<Client> {
+  const parsed = createClientSchema.safeParse(input)
 
   if (!parsed.success) {
     return [null, parsed.error] as const

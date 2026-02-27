@@ -1,19 +1,16 @@
 import { eq } from 'drizzle-orm'
-import z from 'zod'
 import { db } from '..'
 import { client } from '../schema'
+import type { AsyncReturnFunction } from '../types/function-db'
+import type { Client } from '../validators/client'
 
-export const getClientByIdInputSchema = z.object({
-  id: z.uuidv7(),
-})
-
-export type GetClientByIdInput = z.infer<typeof getClientByIdInputSchema>
-
-export async function getClientByIdDB(input: GetClientByIdInput) {
+export async function getClientByIdDB(
+  clientId: Client['id']
+): AsyncReturnFunction<Client> {
   const [clientResult] = await db
     .select()
     .from(client)
-    .where(eq(client.id, input.id))
+    .where(eq(client.id, clientId))
 
   if (!clientResult) {
     return [null, new Error('Client not found')] as const

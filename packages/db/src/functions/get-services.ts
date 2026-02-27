@@ -1,29 +1,6 @@
 import { desc, eq } from 'drizzle-orm'
-import { db } from '..'
+import { db, selectServiceWithClientAndPaymentsSchema } from '..'
 import { client, service, servicePayment } from '../schema'
-
-interface ServicePayment {
-  amountCents: number
-  id: string
-  paidAt: Date | null
-}
-
-interface ServiceWithPayments {
-  client: {
-    isAssociated: boolean
-    id: string
-    name: string
-    phone: string | null
-  } | null
-  createdAt: Date
-  description: string
-  id: string
-  payments: ServicePayment[]
-  status: 'open' | 'done' | 'canceled'
-  totalAmountCents: number
-  updatedAt: Date | null
-  workedMinutes: number
-}
 
 export async function getServicesDB() {
   const services = await db
@@ -56,41 +33,13 @@ export async function getServicesDB() {
     return [null, new Error('Failed to fetch services')] as const
   }
 
-  const servicesMap = new Map<string, ServiceWithPayments>()
+  const servicesParsed = selectServiceWithClientAndPaymentsSchema
+    .array()
+    .safeParse(services)
 
-  for (const row of services) {
-    const existing = servicesMap.get(row.id)
-    const normalizedClient = row.client?.id
-      ? {
-          isAssociated: row.client.isAssociated,
-          id: row.client.id,
-          name: row.client.name,
-          phone: row.client.phone,
-        }
-      : null
-
-    const base = existing ?? {
-      id: row.id,
-      description: row.description,
-      createdAt: row.createdAt,
-      updatedAt: row.updatedAt,
-      status: row.status,
-      workedMinutes: row.workedMinutes,
-      totalAmountCents: row.totalAmountCents ?? 0,
-      client: normalizedClient,
-      payments: [] as ServicePayment[],
-    }
-
-    if (row.payments?.id) {
-      base.payments.push({
-        id: row.payments.id,
-        amountCents: row.payments.amountCents,
-        paidAt: row.payments.paidAt,
-      })
-    }
-
-    servicesMap.set(row.id, base)
+  if (!servicesParsed.success) {
+    return [null, new Error('Failed to parse services data')] as const
   }
 
-  return [Array.from(servicesMap.values()), null] as const
+  return [servicesParsed.data, null] as const
 }

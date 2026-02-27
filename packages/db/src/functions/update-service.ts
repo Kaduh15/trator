@@ -2,12 +2,19 @@ import { eq } from 'drizzle-orm'
 import { db } from '..'
 import { service } from '../schema'
 import {
+  type Service,
   type UpdateServiceInput,
-  updateServiceInputSchema,
-} from '../schemas/service'
+  updateServiceSchema,
+} from '../validators/service'
 
-export const updateServiceDB = async (input: UpdateServiceInput) => {
-  const parsed = updateServiceInputSchema.safeParse(input)
+export const updateServiceDB = async ({
+  serviceId,
+  input,
+}: {
+  serviceId: Service['id']
+  input: UpdateServiceInput
+}) => {
+  const parsed = updateServiceSchema.safeParse(input)
 
   if (!parsed.success) {
     return [null, parsed.error] as const
@@ -18,7 +25,7 @@ export const updateServiceDB = async (input: UpdateServiceInput) => {
   const [serviceResult] = await db
     .select()
     .from(service)
-    .where(eq(service.id, data.serviceId))
+    .where(eq(service.id, serviceId))
 
   if (!serviceResult) {
     return [null, new Error('Failed to update service')] as const
@@ -26,22 +33,8 @@ export const updateServiceDB = async (input: UpdateServiceInput) => {
 
   const [updatedService] = await db
     .update(service)
-    .set({
-      status: 'done',
-      workedMinutes: data.workedMinutes,
-      totalClientCents:
-        Math.round(
-          (data.workedMinutes / 60) *
-            (serviceResult.clientHourlyRateCents / 100)
-        ) * 100,
-      totalTractorCents:
-        Math.round(
-          (data.workedMinutes / 60) *
-            (serviceResult.tractorHourlyRateCents / 100)
-        ) * 100,
-      finishedAt: new Date(),
-    })
-    .where(eq(service.id, data.serviceId))
+    .set(data)
+    .where(eq(service.id, serviceId))
     .returning()
 
   if (!updatedService) {

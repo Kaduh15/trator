@@ -1,13 +1,17 @@
 import { desc, eq } from 'drizzle-orm'
 import { db } from '..'
 import { client, rateSetting, service } from '../schema'
+import type { AsyncReturnFunction } from '../types/function-db'
 import {
   type CreateServiceInput,
-  createServiceInputSchema,
-} from '../schemas/service'
+  createServiceSchema,
+  type Service,
+} from '../validators/service'
 
-export const createServiceDB = async (input: CreateServiceInput) => {
-  const parsed = createServiceInputSchema.safeParse(input)
+export const createServiceDB = async (
+  input: CreateServiceInput
+): AsyncReturnFunction<Service> => {
+  const parsed = createServiceSchema.safeParse(input)
 
   if (!parsed.success) {
     return [null, parsed.error] as const

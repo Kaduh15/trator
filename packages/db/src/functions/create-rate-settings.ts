@@ -1,12 +1,16 @@
 import { db } from '..'
 import { rateSetting } from '../schema'
+import type { AsyncReturnFunction } from '../types/function-db'
 import {
   type CreateRateSettingsInput,
-  createRateSettingsInputSchema,
-} from '../schemas/rate-settings'
+  createRateSettingsSchema,
+  type RateSettings,
+} from '../validators/rate-settings'
 
-export async function createRateSettingsDB(input: CreateRateSettingsInput) {
-  const parsed = createRateSettingsInputSchema.safeParse(input)
+export async function createRateSettingsDB(
+  input: CreateRateSettingsInput
+): AsyncReturnFunction<RateSettings> {
+  const parsed = createRateSettingsSchema.safeParse(input)
 
   if (!parsed.success) {
     return [null, parsed.error] as const
@@ -16,14 +20,7 @@ export async function createRateSettingsDB(input: CreateRateSettingsInput) {
 
   const [rateSettingsResult] = await db
     .insert(rateSetting)
-    .values([
-      {
-        clientAssociateHourlyRate: data.clientAssociateHourlyRate,
-        clientNonAssociateHourlyRate: data.clientNonAssociateHourlyRate,
-        tractorHourlyRate: data.tractorHourlyRate,
-        createdByUserId: data.createdByUserId,
-      },
-    ])
+    .values(data)
     .returning()
 
   if (!rateSettingsResult) {

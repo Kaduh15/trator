@@ -1,8 +1,10 @@
 import { desc } from 'drizzle-orm'
 import { db } from '..'
 import { rateSetting } from '../schema'
+import type { AsyncReturnFunction } from '../types/function-db'
+import type { RateSettings } from '../validators/rate-settings'
 
-export async function getRateSettingsDB() {
+export async function getRateSettingsDB(): AsyncReturnFunction<RateSettings> {
   const [rateSettingsResult] = await db
     .select()
     .from(rateSetting)
