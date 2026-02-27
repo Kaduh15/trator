@@ -1,10 +1,10 @@
+import { selectRateSettingsSchema } from '@trator/db'
+import { getRateSettingsDB } from '@trator/db/functions/get-rate-settings'
+import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
 import {
   dataResponseSchema,
   errorResponseSchema,
-  rateSettingsSchema,
-} from '@trator/db'
-import { getRateSettingsDB } from '@trator/db/functions/get-rate-settings'
-import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
+} from '@/schemas/data-response'
 import { sendError } from '@/utils/http-error'
 import { HTTP_STATUS } from '@/utils/http-status'
 import { adminPermission } from './hooks/admin-permission'
@@ -18,7 +18,7 @@ export const getRateSettingsRoute: FastifyPluginCallbackZod = (app) => {
       schema: {
         tags: ['RateSettings'],
         response: {
-          [HTTP_STATUS.OK]: dataResponseSchema(rateSettingsSchema),
+          [HTTP_STATUS.OK]: dataResponseSchema(selectRateSettingsSchema),
           [HTTP_STATUS.UNAUTHORIZED]: errorResponseSchema,
           [HTTP_STATUS.FORBIDDEN]: errorResponseSchema,
           [HTTP_STATUS.INTERNAL_SERVER_ERROR]: errorResponseSchema,

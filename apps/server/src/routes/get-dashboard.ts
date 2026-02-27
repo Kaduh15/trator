@@ -1,11 +1,10 @@
-import {
-  dashboardQuerySchema,
-  dashboardSummarySchema,
-  dataResponseSchema,
-  errorResponseSchema,
-} from '@trator/db'
+import { dashboardQuerySchema, dashboardSummarySchema } from '@trator/db'
 import { getDashboardDB } from '@trator/db/functions/get-dashboard'
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
+import {
+  dataResponseSchema,
+  errorResponseSchema,
+} from '@/schemas/data-response'
 import { sendError } from '@/utils/http-error'
 import { HTTP_STATUS } from '@/utils/http-status'
 import { adminPermission } from './hooks/admin-permission'

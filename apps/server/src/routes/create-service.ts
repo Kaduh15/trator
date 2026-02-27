@@ -1,11 +1,10 @@
-import {
-  createServiceInputSchema,
-  createServiceResponseSchema,
-  dataResponseSchema,
-  errorResponseSchema,
-} from '@trator/db'
+import { createServiceSchema } from '@trator/db'
 import { createServiceDB } from '@trator/db/functions/create-service'
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
+import {
+  dataResponseSchema,
+  errorResponseSchema,
+} from '@/schemas/data-response'
 import { sendError } from '@/utils/http-error'
 import { HTTP_STATUS } from '@/utils/http-status'
 import { checkSession } from './hooks/check-session'
@@ -18,11 +17,9 @@ export const createServiceRoute: FastifyPluginCallbackZod = (app) => {
       preHandler: [checkSession, tractorPermission],
       schema: {
         tags: ['Services'],
-        body: createServiceInputSchema.omit({ tractorUserId: true }),
+        body: createServiceSchema.omit({ tractorUserId: true }),
         response: {
-          [HTTP_STATUS.CREATED]: dataResponseSchema(
-            createServiceResponseSchema
-          ),
+          [HTTP_STATUS.CREATED]: dataResponseSchema(createServiceSchema),
           [HTTP_STATUS.INTERNAL_SERVER_ERROR]: errorResponseSchema,
           [HTTP_STATUS.UNAUTHORIZED]: errorResponseSchema,
           [HTTP_STATUS.FORBIDDEN]: errorResponseSchema,
@@ -35,11 +32,10 @@ export const createServiceRoute: FastifyPluginCallbackZod = (app) => {
         return
       }
 
-      const { clientId, description } = request.body
+      const input = request.body
 
       const [data, error] = await createServiceDB({
-        clientId,
-        description,
+        ...input,
         tractorUserId: request.session.user.id,
       })
 

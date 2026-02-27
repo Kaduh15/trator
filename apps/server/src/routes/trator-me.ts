@@ -1,10 +1,10 @@
+import { tractorHoursSchema } from '@trator/db'
+import { getHoursDB } from '@trator/db/functions/get-hours'
+import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
 import {
   dataResponseSchema,
   errorResponseSchema,
-  tractorHoursSchema,
-} from '@trator/db'
-import { getHoursDB } from '@trator/db/functions/get-hours'
-import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
+} from '@/schemas/data-response'
 import { sendError } from '@/utils/http-error'
 import { HTTP_STATUS } from '@/utils/http-status'
 import { checkSession } from './hooks/check-session'
