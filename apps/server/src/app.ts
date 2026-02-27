@@ -10,15 +10,7 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
-import { createClientsRoute } from './routes/create-client'
-import { createRateSettingsRoute } from './routes/create-rate-settings'
-import { createServiceRoute } from './routes/create-service'
-import { getClientsRoute } from './routes/get-clients'
-import { getDashboardRoute } from './routes/get-dashboard'
-import { getRateSettingsRoute } from './routes/get-rate-settings'
-import { getServicesRoute } from './routes/get-services'
-import { getHoursRoute } from './routes/trator-me'
-import { updateServiceRoute } from './routes/update-service'
+import * as routes from './routes'
 
 const baseCorsConfig: FastifyCorsOptions = {
   origin: env.CORS_ORIGIN,
@@ -29,24 +21,9 @@ const baseCorsConfig: FastifyCorsOptions = {
 }
 
 async function registerRoutes(app: ReturnType<typeof buildApp>) {
-  // services
-  await app.register(createServiceRoute, { prefix: '/api' })
-  await app.register(getServicesRoute, { prefix: '/api' })
-  await app.register(updateServiceRoute, { prefix: '/api' })
-
-  // Client routes
-  await app.register(createClientsRoute, { prefix: '/api' })
-  await app.register(getClientsRoute, { prefix: '/api' })
-
-  // Rate settings routes
-  await app.register(createRateSettingsRoute, { prefix: '/api' })
-  await app.register(getRateSettingsRoute, { prefix: '/api' })
-
-  // Dashboard routes
-  await app.register(getDashboardRoute, { prefix: '/api' })
-
-  // tractor
-  await app.register(getHoursRoute, { prefix: '/api' })
+  for (const route of Object.values(routes)) {
+    await app.register(route, { prefix: '/api' })
+  }
 }
 
 export function buildApp() {
