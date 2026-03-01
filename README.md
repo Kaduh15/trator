@@ -26,6 +26,49 @@ First, install the dependencies:
 pnpm install
 ```
 
+## Docker
+
+### Prerequisites
+
+- Docker and Docker Compose installed
+- Create a local env file:
+
+```bash
+cp .env.example .env
+```
+
+Update `BETTER_AUTH_SECRET` in `.env` before running in production.
+
+### Development
+
+The dev setup uses `docker-compose.yml` with `docker-compose.override.yml` (loaded automatically).
+
+```bash
+docker compose up --build
+```
+
+- Web: http://localhost:3001
+- API: http://localhost:3000
+- Postgres: localhost:5432
+
+### Production
+
+Use the prod override file:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build
+```
+
+- Web: http://localhost:8080
+- API: http://localhost:3000
+
+### Useful commands
+
+```bash
+docker compose down
+docker compose -f docker-compose.yml -f docker-compose.prod.yml build --no-cache
+```
+
 ## Database Setup
 
 This project uses PostgreSQL with Drizzle ORM.
