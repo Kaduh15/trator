@@ -1,0 +1,17 @@
+services:
+  web:
+    volumes:
+      - .:/app
+      - web_node_modules:/app/node_modules
+      - pnpm_store:/pnpm/store
+
+  server:
+    volumes:
+      - .:/app
+      - server_node_modules:/app/node_modules
+      - pnpm_store:/pnpm/store
+
+volumes:
+  pnpm_store:
+  web_node_modules:
+  server_node_modules:
