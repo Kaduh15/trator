@@ -56,6 +56,10 @@ export function buildApp() {
 
   app.register(scalarReference, {
     routePrefix: '/api/docs',
+    configuration: {
+      theme: 'deepSpace',
+      defaultOpenAllTags: true,
+    },
   })
 
   app.decorateRequest('session', null)
