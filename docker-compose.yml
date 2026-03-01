@@ -34,9 +34,8 @@ services:
       POSTGRES_DB: trator
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "5432:5432"
     volumes:
       - trator_postgres_data:/var/lib/postgresql
     healthcheck:
