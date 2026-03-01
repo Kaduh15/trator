@@ -4,10 +4,10 @@ export const dashboardSummarySchema = z.object({
   month: z.string(),
   currency: z.string(),
   summary: z.object({
-    totalGeneratedCents: z.number().int(),
-    receivedCents: z.number().int(),
-    totalExpensesCents: z.number().int(),
-    finalBalanceCents: z.number().int(),
+    totalGeneratedCents: z.number().positive(),
+    receivedCents: z.number().positive(),
+    totalExpensesCents: z.number().positive(),
+    finalBalanceCents: z.number(),
   }),
 })
 

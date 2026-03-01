@@ -1,4 +1,4 @@
-import { desc, eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { db, selectServiceWithClientAndPaymentsSchema } from '..'
 import { client, service, servicePayment } from '../schema'
 
@@ -12,22 +12,39 @@ export async function getServicesDB() {
       status: service.status,
       workedMinutes: service.workedMinutes,
       totalAmountCents: service.totalClientCents,
-      client: {
-        isAssociated: client.isAssociated,
-        id: client.id,
-        name: client.name,
-        phone: client.phone,
-      },
-      payments: {
-        id: servicePayment.id,
-        amountCents: servicePayment.amountCents,
-        paidAt: servicePayment.paidAt,
-      },
+      tractorUserId: service.tractorUserId,
+      clientHourlyRateCents: service.clientHourlyRateCents,
+      tractorHourlyRateCents: service.tractorHourlyRateCents,
+      totalClientCents: service.totalClientCents,
+      totalTractorCents: service.totalTractorCents,
+      finishedAt: service.finishedAt,
+
+      client: sql`
+      json_build_object(
+        'id', ${client.id},
+        'name', ${client.name},
+        'phone', ${client.phone},
+        'isAssociated', ${client.isAssociated}
+      )
+    `.as('client'),
+
+      payments: sql`
+      coalesce(
+        json_agg(
+          json_build_object(
+            'id', ${servicePayment.id},
+            'amountCents', ${servicePayment.amountCents},
+            'paidAt', ${servicePayment.paidAt}
+          )
+        ) filter (where ${servicePayment.id} is not null),
+        '[]'
+      )
+    `.as('payments'),
     })
     .from(service)
-    .orderBy(desc(service.createdAt))
     .leftJoin(client, eq(service.clientId, client.id))
-    .leftJoin(servicePayment, eq(servicePayment.serviceId, service.id))
+    .leftJoin(servicePayment, eq(service.id, servicePayment.serviceId))
+    .groupBy(service.id, client.id)
 
   if (!services) {
     return [null, new Error('Failed to fetch services')] as const
@@ -37,7 +54,7 @@ export async function getServicesDB() {
     .array()
     .safeParse(services)
 
-  if (!servicesParsed.success) {
+  if (servicesParsed.error) {
     return [null, new Error('Failed to parse services data')] as const
   }
 

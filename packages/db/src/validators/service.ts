@@ -17,10 +17,14 @@ export const selectServiceSchema = createSelectSchema(service)
 
 export const selectServiceWithClientAndPaymentsSchema = createSelectSchema(
   service
-).extend({
-  client: createSelectSchema(client),
-  payments: createSelectSchema(servicePayment).array(),
-})
+)
+  .omit({
+    clientId: true,
+  })
+  .extend({
+    client: createSelectSchema(client),
+    payments: createSelectSchema(servicePayment).array(),
+  })
 
 export const updateServiceSchema = createUpdateSchema(service).omit({
   createdAt: true,
