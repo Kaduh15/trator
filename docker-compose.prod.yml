@@ -1,7 +1,5 @@
 services:
   web:
-    build:
-      target: prod
     ports:
       - "8080:80"
     environment:
@@ -9,8 +7,6 @@ services:
       VITE_SERVER_URL: ${VITE_SERVER_URL:-http://localhost:3000}
 
   server:
-    build:
-      target: prod
     environment:
       NODE_ENV: production
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-HBobso8FtiaCtNzcePQlvedc40xnuuZx}

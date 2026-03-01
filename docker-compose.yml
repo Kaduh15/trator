@@ -3,7 +3,6 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
-      target: dev
     ports:
       - "3001:3001"
     environment:
@@ -16,7 +15,6 @@ services:
     build:
       context: .
       dockerfile: apps/server/Dockerfile
-      target: dev
     ports:
       - "3000:3000"
     environment:
