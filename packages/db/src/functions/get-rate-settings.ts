@@ -1,6 +1,6 @@
 import { desc } from 'drizzle-orm'
 import { db } from '..'
-import { rateSetting } from '../schema'
+import { rateSetting } from '../schema/index'
 import type { AsyncReturnFunction } from '../types/function-db'
 import type { RateSettings } from '../validators/rate-settings'
 

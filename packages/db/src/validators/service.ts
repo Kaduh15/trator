@@ -22,7 +22,10 @@ export const selectServiceWithClientAndPaymentsSchema = createSelectSchema(
     clientId: true,
   })
   .extend({
-    client: createSelectSchema(client),
+    client: createSelectSchema(client).omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
     payments: createSelectSchema(servicePayment).array(),
   })
 

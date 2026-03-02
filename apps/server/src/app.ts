@@ -49,7 +49,6 @@ export function buildApp() {
         description: 'Sample backend service',
         version: '1.0.0',
       },
-      servers: [],
     },
     transform: jsonSchemaTransform,
   })

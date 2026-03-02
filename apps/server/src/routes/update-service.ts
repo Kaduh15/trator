@@ -12,12 +12,12 @@ import { tractorPermission } from './hooks/tractor-permission'
 
 export const updateServiceRoute: FastifyPluginCallbackZod = (app) => {
   app.put(
-    '/services/:serviceId',
+    '/services/:id',
     {
       preHandler: [checkSession, tractorPermission],
       schema: {
         tags: ['Services'],
-        body: updateServiceSchema,
+        body: updateServiceSchema.pick({ workedMinutes: true }),
         params: selectServiceSchema.pick({ id: true }),
         response: {
           [HTTP_STATUS.OK]: dataResponseSchema(selectServiceSchema),
