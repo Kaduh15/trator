@@ -6,11 +6,11 @@ export async function getHoursDB() {
   try {
     const weekStartDate = sql<string>`to_char(date_trunc('week', ${service.finishedAt}), 'YYYY-MM-DD')`
 
-    const services = await db
+    const getServices = db
       .select({
         weekStartDate,
-        workedMinutes: sum(service.workedMinutes),
-        tractorCents: sum(service.totalTractorCents),
+        workedMinutes: sum(service.workedMinutes).mapWith(Number),
+        tractorCents: sum(service.totalTractorCents).mapWith(Number),
       })
       .from(service)
       .where(
@@ -24,6 +24,8 @@ export async function getHoursDB() {
       )
       .groupBy(weekStartDate)
       .orderBy(asc(weekStartDate))
+
+    const services = await getServices
 
     const weeks = services.map((row) => ({
       weekStartDate: row.weekStartDate,
