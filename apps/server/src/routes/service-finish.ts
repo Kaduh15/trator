@@ -39,9 +39,9 @@ export const serviceFinishRoute: FastifyPluginCallbackZod = (app) => {
         input: {
           workedMinutes,
           totalClientCents:
-            service.clientHourlyRateCents * Math.floor(workedMinutes / 60),
+            (service.clientHourlyRateCents * workedMinutes) / 60,
           totalTractorCents:
-            service.tractorHourlyRateCents * Math.floor(workedMinutes / 60),
+            (service.tractorHourlyRateCents * workedMinutes) / 60,
           finishedAt,
         },
       })
