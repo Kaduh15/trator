@@ -6,12 +6,12 @@ import {
 import { Toaster } from '@/components/ui/sonner'
 
 import '../index.css'
+import { NotFound } from '@/components/not-found'
 import { Providers } from '@/providers'
 
 export type RouterAppContext = Record<string, never>
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
-  component: RootComponent,
   head: () => ({
     meta: [
       {
@@ -29,6 +29,9 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
       },
     ],
   }),
+
+  component: RootComponent,
+  notFoundComponent: NotFound,
 })
 
 function RootComponent() {

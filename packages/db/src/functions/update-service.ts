@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { db } from '..'
-import { service } from '../schema'
+import { service } from '../schema/index'
 import {
   type Service,
   type UpdateServiceInput,
@@ -33,7 +33,11 @@ export const updateServiceDB = async ({
 
   const [updatedService] = await db
     .update(service)
-    .set(data)
+    .set({
+      ...data,
+      status:
+        data?.workedMinutes && data.workedMinutes > 0 ? 'done' : undefined,
+    })
     .where(eq(service.id, serviceId))
     .returning()
 

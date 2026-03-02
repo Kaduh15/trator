@@ -1,10 +1,7 @@
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 import type {
   CreateServiceInput,
-  CreateServiceResponse,
-  ServiceListItem,
-  UpdateServiceInput,
-  UpdateServiceResponse,
+  ServiceWithClientAndPayments,
 } from '@trator/db'
 import { toast } from 'sonner'
 import { queryClient } from '@/providers/query-provider'
@@ -14,7 +11,7 @@ export const getServicesQueryOptions = () =>
   queryOptions({
     queryKey: ['services'],
     queryFn: async () => {
-      const { data } = await api.get<{ data: ServiceListItem[] }>(
+      const { data } = await api.get<{ data: ServiceWithClientAndPayments[] }>(
         '/api/services'
       )
 
@@ -25,8 +22,10 @@ export const getServicesQueryOptions = () =>
 export const createServiceMutationOptions = () =>
   mutationOptions({
     mutationKey: ['createService'],
-    mutationFn: async (input: Omit<CreateServiceInput, 'tractorUserId'>) => {
-      const { data } = await api.post<{ data: CreateServiceResponse }>(
+    mutationFn: async (
+      input: Pick<CreateServiceInput, 'description' | 'clientId'>
+    ) => {
+      const { data } = await api.post<{ data: ServiceWithClientAndPayments[] }>(
         '/api/services',
         {
           description: input.description,
@@ -43,14 +42,20 @@ export const createServiceMutationOptions = () =>
     },
   })
 
-export const updateServiceMutationOptions = () =>
+export const finishServiceMutationOptions = () =>
   mutationOptions({
-    mutationKey: ['updateService'],
-    mutationFn: async (input: UpdateServiceInput) => {
-      const { data } = await api.put<{ data: UpdateServiceResponse }>(
-        `/api/services/${input.serviceId}`,
+    mutationKey: ['finishService'],
+    mutationFn: async ({
+      serviceId,
+      workedMinutes,
+    }: {
+      serviceId: string
+      workedMinutes: number
+    }) => {
+      const { data } = await api.post<{ data: ServiceWithClientAndPayments }>(
+        `/api/services/${serviceId}/finish`,
         {
-          workedMinutes: input.workedMinutes,
+          workedMinutes,
         }
       )
 

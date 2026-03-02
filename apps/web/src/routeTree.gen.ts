@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as NotFoundRouteImport } from './routes/not-found'
 import { Route as privateRouteRouteImport } from './routes/(private)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
@@ -24,6 +25,11 @@ import { Route as privateTratorwithNavbarServicosRouteImport } from './routes/(p
 import { Route as privateTratorwithNavbarHorasRouteImport } from './routes/(private)/trator/(with-navbar)/horas'
 import { Route as privateadminServicosIdPagamentoRouteImport } from './routes/(private)/(admin)/servicos/$id/pagamento'
 
+const NotFoundRoute = NotFoundRouteImport.update({
+  id: '/not-found',
+  path: '/not-found',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const privateRouteRoute = privateRouteRouteImport.update({
   id: '/(private)',
   getParentRoute: () => rootRouteImport,
@@ -98,6 +104,7 @@ const privateadminServicosIdPagamentoRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/not-found': typeof NotFoundRoute
   '/trator': typeof privateTratorwithNavbarRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/dashboard': typeof privateadminDashboardRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/servicos/$id/pagamento': typeof privateadminServicosIdPagamentoRoute
 }
 export interface FileRoutesByTo {
+  '/not-found': typeof NotFoundRoute
   '/trator': typeof privateTratorwithNavbarRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/dashboard': typeof privateadminDashboardRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(auth)': typeof authRouteRouteWithChildren
   '/(private)': typeof privateRouteRouteWithChildren
+  '/not-found': typeof NotFoundRoute
   '/(private)/(admin)': typeof privateadminRouteRouteWithChildren
   '/(private)/trator': typeof privateTratorRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
@@ -141,6 +150,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/not-found'
     | '/trator'
     | '/login'
     | '/dashboard'
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/servicos/$id/pagamento'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/not-found'
     | '/trator'
     | '/login'
     | '/dashboard'
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/(auth)'
     | '/(private)'
+    | '/not-found'
     | '/(private)/(admin)'
     | '/(private)/trator'
     | '/(auth)/login'
@@ -184,10 +196,18 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   privateRouteRoute: typeof privateRouteRouteWithChildren
+  NotFoundRoute: typeof NotFoundRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/not-found': {
+      id: '/not-found'
+      path: '/not-found'
+      fullPath: '/not-found'
+      preLoaderRoute: typeof NotFoundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(private)': {
       id: '/(private)'
       path: ''
@@ -367,6 +387,7 @@ const privateRouteRouteWithChildren = privateRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   privateRouteRoute: privateRouteRouteWithChildren,
+  NotFoundRoute: NotFoundRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

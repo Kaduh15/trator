@@ -8,8 +8,8 @@ import { ButtonGroup } from '@/components/ui/button-group'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import {
+  finishServiceMutationOptions,
   getServicesQueryOptions,
-  updateServiceMutationOptions,
 } from '@/http/queries/service'
 import { queryClient } from '@/providers/query-provider'
 
@@ -38,8 +38,8 @@ function RouteComponent() {
 
   const workedMinutesNumber = extractWorkedMinutes(workedMinutes)
 
-  const { mutateAsync: updateService } = useMutation(
-    updateServiceMutationOptions()
+  const { mutateAsync: finishServiceUpdate } = useMutation(
+    finishServiceMutationOptions()
   )
 
   async function handleUpdateService(serviceId: string) {
@@ -47,7 +47,7 @@ function RouteComponent() {
       return
     }
 
-    await updateService(
+    await finishServiceUpdate(
       {
         serviceId,
         workedMinutes: workedMinutesNumber,

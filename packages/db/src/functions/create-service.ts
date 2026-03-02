@@ -9,9 +9,11 @@ import {
 } from '../validators/service'
 
 export const createServiceDB = async (
-  input: CreateServiceInput
+  input: Pick<CreateServiceInput, 'description' | 'clientId' | 'tractorUserId'>
 ): AsyncReturnFunction<Service> => {
-  const parsed = createServiceSchema.safeParse(input)
+  const parsed = createServiceSchema
+    .pick({ description: true, clientId: true, tractorUserId: true })
+    .safeParse(input)
 
   if (!parsed.success) {
     return [null, parsed.error] as const

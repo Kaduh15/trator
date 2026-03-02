@@ -23,6 +23,7 @@
     "@trator/env": "workspace:*",
     "dotenv": "catalog:",
     "drizzle-orm": "^0.45.1",
+    "drizzle-query-logger": "^1.1.2",
     "drizzle-zod": "^0.8.3",
     "pg": "^8.17.1",
     "uuid": "^13.0.0",
