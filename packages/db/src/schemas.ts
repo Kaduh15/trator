@@ -1,5 +1,0 @@
-export * from './validators/client'
-export * from './validators/dashboard'
-export * from './validators/rate-settings'
-export * from './validators/service'
-export * from './validators/tractor'
