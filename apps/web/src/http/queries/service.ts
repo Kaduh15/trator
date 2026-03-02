@@ -42,9 +42,9 @@ export const createServiceMutationOptions = () =>
     },
   })
 
-export const updateServiceMutationOptions = () =>
+export const finishServiceMutationOptions = () =>
   mutationOptions({
-    mutationKey: ['updateService'],
+    mutationKey: ['finishService'],
     mutationFn: async ({
       serviceId,
       workedMinutes,
@@ -52,8 +52,8 @@ export const updateServiceMutationOptions = () =>
       serviceId: string
       workedMinutes: number
     }) => {
-      const { data } = await api.put<{ data: ServiceWithClientAndPayments }>(
-        `/api/services/${serviceId}`,
+      const { data } = await api.post<{ data: ServiceWithClientAndPayments }>(
+        `/api/services/${serviceId}/finish`,
         {
           workedMinutes,
         }

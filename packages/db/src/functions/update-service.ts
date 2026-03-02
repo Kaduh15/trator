@@ -14,11 +14,7 @@ export const updateServiceDB = async ({
   serviceId: Service['id']
   input: UpdateServiceInput
 }) => {
-  const parsed = updateServiceSchema
-    .pick({
-      workedMinutes: true,
-    })
-    .safeParse(input)
+  const parsed = updateServiceSchema.safeParse(input)
 
   if (!parsed.success) {
     return [null, parsed.error] as const
