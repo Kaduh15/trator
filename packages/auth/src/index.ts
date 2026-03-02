@@ -1,5 +1,5 @@
 import { db } from '@trator/db'
-import * as schema from '@trator/db/schema/auth'
+import * as schema from '@trator/db/schemas'
 import { env } from '@trator/env/server'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
