@@ -66,7 +66,7 @@ export async function getDashboardDB(options?: { month?: string }) {
 
     const [paymentTotals] = await db
       .select({
-        receivedCents: sum(servicePayment.amountCents),
+        receivedCents: sum(servicePayment.amountCents).mapWith(Number),
       })
       .from(servicePayment)
       .where(
@@ -80,7 +80,6 @@ export async function getDashboardDB(options?: { month?: string }) {
     return [
       {
         month: monthLabel,
-        currency: 'BRL',
         summary: {
           totalGeneratedCents,
           receivedCents,
