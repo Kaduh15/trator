@@ -34,7 +34,10 @@ export async function getServicesDB() {
           json_build_object(
             'id', ${servicePayment.id},
             'amountCents', ${servicePayment.amountCents},
-            'paidAt', ${servicePayment.paidAt}
+            'paidAt', ${servicePayment.paidAt},
+            'note', ${servicePayment.note},
+            'createdByUserId', ${servicePayment.createdByUserId},
+            'method', ${servicePayment.method}
           )
         ) filter (where ${servicePayment.id} is not null),
         '[]'

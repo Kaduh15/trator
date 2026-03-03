@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getDashboardQueryOptions } from '@/http/queries/dashboard'
 import { queryClient } from '@/providers/query-provider'
+import { formatCurrency } from '@/utils/format-currency'
 
 const capitalize = (value: string) =>
   value.length === 0 ? value : `${value[0].toUpperCase()}${value.slice(1)}`
@@ -42,44 +43,40 @@ function RouteComponent() {
     getDashboardQueryOptions({ month: selectedMonthParam })
   )
 
-  const formatCurrency = (valueInCents: number, currency: string) =>
-    (valueInCents / 100).toLocaleString('pt-BR', {
-      style: 'currency',
-      currency,
-    })
-
-  const totalGeneratedCents = data.summary.totalGeneratedCents
-  const receivedCents = data.summary.receivedCents
-  const totalExpensesCents = data.summary.totalExpensesCents
-  const finalBalanceCents = data.summary.finalBalanceCents
+  const {
+    totalGeneratedCents,
+    totalExpensesCents,
+    finalBalanceCents,
+    receivedCents,
+  } = data.summary
 
   const summaryCards = [
     {
       id: 'total-generated',
       icon: DollarSignIcon,
       label: 'Total gerado',
-      value: formatCurrency(totalGeneratedCents, data.currency),
+      value: formatCurrency(totalGeneratedCents),
       valueClassName: 'text-base font-semibold text-primary',
     },
     {
       id: 'received',
       icon: FileTextIcon,
       label: 'Recebido',
-      value: formatCurrency(receivedCents, data.currency),
+      value: formatCurrency(receivedCents),
       valueClassName: 'text-base font-semibold',
     },
     {
       id: 'total-expenses',
       icon: WrenchIcon,
       label: 'Total despesas',
-      value: formatCurrency(totalExpensesCents, data.currency),
+      value: formatCurrency(totalExpensesCents),
       valueClassName: 'text-base font-semibold text-destructive',
     },
     {
       id: 'final-balance',
       icon: LayoutDashboardIcon,
       label: 'Saldo final',
-      value: formatCurrency(finalBalanceCents, data.currency),
+      value: formatCurrency(finalBalanceCents),
       valueClassName: 'text-base font-semibold text-primary',
     },
   ] as const

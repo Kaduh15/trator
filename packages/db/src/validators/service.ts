@@ -3,7 +3,7 @@ import {
   createSelectSchema,
   createUpdateSchema,
 } from 'drizzle-zod'
-import type z from 'zod'
+import { z } from 'zod'
 import { client, servicePayment } from '../schema'
 import { service } from '../schema/service'
 
@@ -26,7 +26,14 @@ export const selectServiceWithClientAndPaymentsSchema = createSelectSchema(
       createdAt: true,
       updatedAt: true,
     }),
-    payments: createSelectSchema(servicePayment).array(),
+    payments: createSelectSchema(servicePayment)
+      .omit({
+        serviceId: true,
+      })
+      .extend({
+        paidAt: z.coerce.date(),
+      })
+      .array(),
   })
 
 export const updateServiceSchema = createUpdateSchema(service).omit({

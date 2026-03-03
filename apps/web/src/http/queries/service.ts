@@ -69,3 +69,38 @@ export const finishServiceMutationOptions = () =>
       toast.success('Serviço atualizado com sucesso')
     },
   })
+
+export const registerPaymentMutationOptions = () =>
+  mutationOptions({
+    mutationKey: ['registerPayment'],
+    mutationFn: async ({
+      serviceId,
+      amountCents,
+      note,
+    }: {
+      serviceId: string
+      amountCents: number
+      note: string
+    }) => {
+      const { data } = await api.post<{ data: ServiceWithClientAndPayments }>(
+        `/api/services/${serviceId}/payment`,
+        {
+          amountCents,
+          note,
+        }
+      )
+
+      return data.data
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['services'],
+      })
+
+      await queryClient.invalidateQueries({
+        queryKey: ['dashboard', 'current'],
+      })
+
+      toast.success('Pagamento registrado com sucesso')
+    },
+  })

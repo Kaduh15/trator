@@ -1,5 +1,5 @@
-import { createServiceSchema } from '@trator/db'
-import { createServiceDB } from '@trator/db/functions/create-service'
+import { createServicePaymentSchema } from '@trator/db'
+import { createServicePaymentDB } from '@trator/db/functions/create-service-payment'
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
 import {
   dataResponseSchema,
@@ -7,19 +7,23 @@ import {
 } from '@/schemas/data-response'
 import { sendError } from '@/utils/http-error'
 import { HTTP_STATUS } from '@/utils/http-status'
+import { adminPermission } from './hooks/admin-permission'
 import { checkSession } from './hooks/check-session'
-import { tractorPermission } from './hooks/tractor-permission'
 
-export const createServiceRoute: FastifyPluginCallbackZod = (app) => {
+export const registerPaymentRoute: FastifyPluginCallbackZod = (app) => {
   app.post(
-    '/services',
+    '/services/:serviceId/payment',
     {
-      preHandler: [checkSession, tractorPermission],
+      preHandler: [checkSession, adminPermission],
       schema: {
         tags: ['Services'],
-        body: createServiceSchema.pick({ clientId: true, description: true }),
+        body: createServicePaymentSchema.pick({
+          amountCents: true,
+          note: true,
+        }),
+        params: createServicePaymentSchema.pick({ serviceId: true }),
         response: {
-          [HTTP_STATUS.CREATED]: dataResponseSchema(createServiceSchema),
+          [HTTP_STATUS.CREATED]: dataResponseSchema(createServicePaymentSchema),
           [HTTP_STATUS.INTERNAL_SERVER_ERROR]: errorResponseSchema,
           [HTTP_STATUS.UNAUTHORIZED]: errorResponseSchema,
           [HTTP_STATUS.FORBIDDEN]: errorResponseSchema,
@@ -33,10 +37,12 @@ export const createServiceRoute: FastifyPluginCallbackZod = (app) => {
       }
 
       const input = request.body
+      const { serviceId } = request.params
 
-      const [data, error] = await createServiceDB({
+      const [data, error] = await createServicePaymentDB({
         ...input,
-        tractorUserId: request.session.user.id,
+        createdByUserId: request.session.user.id,
+        serviceId,
       })
 
       if (error) {
