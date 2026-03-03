@@ -14,7 +14,22 @@ export const Route = createFileRoute('/(private)/(admin)/servicos/')({
 
 function RouteComponent() {
   const { data: services } = useSuspenseQuery(getServicesQueryOptions())
-  const servicesOpen = services.filter((service) => service.status === 'done')
+  const servicesOpen = services.filter((service) => {
+    const totalCents = Math.trunc(
+      (service.clientHourlyRateCents * service.workedMinutes) / 60
+    )
+
+    const totalAmount = totalCents / 100
+
+    const paidAmount =
+      service.payments.reduce((acc, payment) => {
+        return acc + payment.amountCents
+      }, 0) / 100
+
+    const remainingAmount = totalAmount - paidAmount
+
+    return service.status === 'done' && remainingAmount > 0
+  })
 
   const quantityServices = servicesOpen.length
 
