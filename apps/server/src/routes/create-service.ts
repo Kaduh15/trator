@@ -38,7 +38,6 @@ export const createServiceRoute: FastifyPluginCallbackZod = (app) => {
         ...input,
         tractorUserId: request.session.user.id,
       })
-      console.log('🚀 ~ createServiceRoute ~ data:', data)
 
       if (error) {
         sendError(reply, HTTP_STATUS.INTERNAL_SERVER_ERROR, error.message)

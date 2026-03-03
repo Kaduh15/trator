@@ -1,6 +1,7 @@
 import { useForm, useStore } from '@tanstack/react-form'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
+import type { Client } from '@trator/db'
 import { ChevronLeftIcon, PlusIcon } from 'lucide-react'
 import { Activity, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -31,7 +32,6 @@ import {
 } from '@/http/queries/client'
 import { createServiceMutationOptions } from '@/http/queries/service'
 import { queryClient } from '@/providers/query-provider'
-import type { Client } from '@trator/db'
 
 export const Route = createFileRoute('/(private)/trator/servico/novo')({
   component: RouteComponent,
@@ -190,6 +190,7 @@ function RouteComponent() {
             <form
               onSubmit={(event) => {
                 event.preventDefault()
+                event.stopPropagation()
                 form.handleSubmit()
               }}
             >
