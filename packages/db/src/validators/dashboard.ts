@@ -3,10 +3,10 @@ import z from 'zod'
 export const dashboardSummarySchema = z.object({
   month: z.string(),
   summary: z.object({
-    totalGeneratedCents: z.number().positive(),
-    receivedCents: z.number(),
-    totalExpensesCents: z.number().positive(),
-    finalBalanceCents: z.number(),
+    totalGeneratedCents: z.number().positive().catch(0),
+    receivedCents: z.number().catch(0),
+    totalExpensesCents: z.number().positive().catch(0),
+    finalBalanceCents: z.number().catch(0),
   }),
 })
 
