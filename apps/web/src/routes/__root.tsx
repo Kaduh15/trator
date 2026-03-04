@@ -42,7 +42,7 @@ function RootComponent() {
         <div className="min-h-dvh w-screen transition-all">
           <Outlet />
         </div>
-        <Toaster richColors />
+        <Toaster position="top-center" richColors />
       </Providers>
     </>
   )
