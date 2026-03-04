@@ -55,7 +55,6 @@ function RouteComponent() {
       if (!service) {
         return
       }
-
       registerPayment(
         {
           serviceId: service.id,
@@ -228,7 +227,9 @@ function RouteComponent() {
           </form.Field>
 
           <Button
-            onClick={() => form.setFieldValue('amount', totalAmount)}
+            onClick={() =>
+              form.setFieldValue('amount', totalAmount - paidAmount)
+            }
             type="button"
             variant="outline"
           >
