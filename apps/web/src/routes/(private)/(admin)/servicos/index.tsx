@@ -35,7 +35,7 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col">
-      <PageHeader eyebrow="Trator" title="Meus Serviços" />
+      <PageHeader title="Meus Serviços" />
 
       <main className="mb-16 flex flex-1 flex-col justify-between gap-4">
         <section className="flex-1 p-4">
