@@ -1,4 +1,8 @@
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from 'drizzle-zod'
 import type z from 'zod'
 import { client } from '../schema/clients'
 
@@ -8,7 +12,7 @@ export const createClientSchema = createInsertSchema(client).omit({
   id: true,
 })
 export const selectClientSchema = createSelectSchema(client)
-export const updateClientSchema = createInsertSchema(client).omit({
+export const updateClientSchema = createUpdateSchema(client).omit({
   createdAt: true,
   updatedAt: true,
   id: true,
