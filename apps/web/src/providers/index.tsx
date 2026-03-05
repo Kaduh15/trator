@@ -6,7 +6,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <QueryProvider>
       <ThemeProvider
         attribute="class"
-        defaultTheme="dark"
+        defaultTheme="system"
         disableTransitionOnChange
         storageKey="vite-ui-theme"
       >
