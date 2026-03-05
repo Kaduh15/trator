@@ -6,6 +6,7 @@ import {
 import { Toaster } from '@/components/ui/sonner'
 
 import '../index.css'
+import { ErrorBoundary } from '@/components/error-boundary'
 import { NotFound } from '@/components/not-found'
 import { Providers } from '@/providers'
 
@@ -31,6 +32,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
   }),
 
   component: RootComponent,
+  errorComponent: ErrorBoundary,
   notFoundComponent: NotFound,
 })
 
