@@ -7,7 +7,7 @@ import {
   DollarSignIcon,
 } from 'lucide-react'
 import { useState } from 'react'
-import { ButtonLogout } from '@/components/button-logout'
+import { PageHeader } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -66,15 +66,7 @@ function RouteComponent() {
 
   return (
     <div>
-      <header className="flex items-center justify-between border-b px-4 py-3">
-        <div>
-          <p className="text-muted-foreground text-xs uppercase tracking-wide">
-            Trator
-          </p>
-          <h1 className="font-semibold text-lg">Minhas Horas</h1>
-        </div>
-        <ButtonLogout />
-      </header>
+      <PageHeader eyebrow="Trator" title="Minhas Horas" />
 
       <main className="space-y-6 px-4 py-6">
         <section className="space-y-3">

@@ -2,7 +2,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ClockIcon, PlusIcon } from 'lucide-react'
 import { Activity, useState } from 'react'
-import { ButtonLogout } from '@/components/button-logout'
+import { PageHeader } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Input } from '@/components/ui/input'
@@ -65,15 +65,7 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col">
-      <header className="flex items-center justify-between border-b bg-background px-4 py-3">
-        <div>
-          <p className="text-muted-foreground text-xs uppercase tracking-wide">
-            Trator
-          </p>
-          <h1 className="font-semibold text-lg">Meus Serviços</h1>
-        </div>
-        <ButtonLogout />
-      </header>
+      <PageHeader eyebrow="Trator" title="Meus Serviços" withBackground />
 
       <main className="mb-16 flex flex-1 flex-col justify-between gap-4">
         {/* Lista de serviços */}

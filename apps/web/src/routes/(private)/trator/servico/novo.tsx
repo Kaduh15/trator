@@ -5,7 +5,7 @@ import type { Client } from '@trator/db'
 import { ChevronLeftIcon, PlusIcon } from 'lucide-react'
 import { Activity, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { ButtonLogout } from '@/components/button-logout'
+import { PageHeader } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -144,8 +144,9 @@ function RouteComponent() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="flex items-center justify-between border-b bg-background px-4 py-3">
-        <div className="flex items-center gap-2">
+      <PageHeader
+        eyebrow="Trator"
+        leading={
           <Button
             aria-label="Voltar"
             onClick={() =>
@@ -159,15 +160,10 @@ function RouteComponent() {
           >
             <ChevronLeftIcon className="size-4" />
           </Button>
-          <div>
-            <p className="text-muted-foreground text-xs uppercase tracking-wide">
-              Trator
-            </p>
-            <h1 className="font-semibold text-lg">Novo Serviço</h1>
-          </div>
-        </div>
-        <ButtonLogout />
-      </header>
+        }
+        title="Novo Serviço"
+        withBackground
+      />
 
       <main className="flex flex-1 flex-col gap-4 px-4 py-4 pb-20">
         <Card>
