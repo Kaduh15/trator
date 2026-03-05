@@ -40,6 +40,9 @@ export const createServiceMutationOptions = () =>
 
       toast.success('Serviço criado com sucesso')
     },
+    onError: () => {
+      toast.error('Nao foi possivel criar o servico.')
+    },
   })
 
 export const finishServiceMutationOptions = () =>
@@ -67,6 +70,9 @@ export const finishServiceMutationOptions = () =>
       })
 
       toast.success('Serviço atualizado com sucesso')
+    },
+    onError: () => {
+      toast.error('Nao foi possível finalizar o serviço.')
     },
   })
 
@@ -102,5 +108,8 @@ export const registerPaymentMutationOptions = () =>
       })
 
       toast.success('Pagamento registrado com sucesso')
+    },
+    onError: () => {
+      toast.error('Nao foi possivel registrar o pagamento.')
     },
   })

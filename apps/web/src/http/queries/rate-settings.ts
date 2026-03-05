@@ -40,4 +40,7 @@ export const createRateSettingsMutationOptions = () =>
 
       toast.success('Configurações de tarifa atualizadas com sucesso!')
     },
+    onError: () => {
+      toast.error('Nao foi possível salvar as configurações.')
+    },
   })
