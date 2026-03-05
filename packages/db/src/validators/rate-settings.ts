@@ -1,12 +1,16 @@
-import { createInsertSchema } from 'drizzle-zod'
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from 'drizzle-zod'
 import { rateSetting } from '../schema/rate-setting'
 
 export const createRateSettingsSchema = createInsertSchema(rateSetting).omit({
   createdAt: true,
   id: true,
 })
-export const selectRateSettingsSchema = createInsertSchema(rateSetting)
-export const updateRateSettingsSchema = createInsertSchema(rateSetting).omit({
+export const selectRateSettingsSchema = createSelectSchema(rateSetting)
+export const updateRateSettingsSchema = createUpdateSchema(rateSetting).omit({
   createdAt: true,
   id: true,
 })
