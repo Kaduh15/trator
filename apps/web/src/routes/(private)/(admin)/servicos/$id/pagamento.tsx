@@ -3,7 +3,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { CalendarIcon, ClockIcon } from 'lucide-react'
 import z from 'zod'
-import { ButtonLogout } from '@/components/button-logout'
+import { PageHeader } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -114,15 +114,7 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col">
-      <header className="flex items-center justify-between border-b bg-background px-4 py-3">
-        <div>
-          <p className="text-muted-foreground text-xs uppercase tracking-wide">
-            Trator
-          </p>
-          <h1 className="font-semibold text-lg">Registrar pagamento</h1>
-        </div>
-        <ButtonLogout />
-      </header>
+      <PageHeader eyebrow="Trator" title="Registrar pagamento" />
 
       <main className="mb-16 flex flex-1 flex-col justify-between gap-4 p-2">
         <section className="flex-1 border p-4">

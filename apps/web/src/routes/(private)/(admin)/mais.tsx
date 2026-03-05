@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ChevronRightIcon, SettingsIcon, UsersIcon } from 'lucide-react'
-import { ButtonLogout } from '@/components/button-logout'
+import { PageHeader } from '@/components/page-header'
 import { buttonVariants } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 
@@ -11,12 +11,7 @@ export const Route = createFileRoute('/(private)/(admin)/mais')({
 function RouteComponent() {
   return (
     <div className="space-y-2">
-      <header className="flex items-center justify-between border-b px-4 py-3">
-        <div>
-          <h1 className="font-semibold text-lg">Mais</h1>
-        </div>
-        <ButtonLogout />
-      </header>
+      <PageHeader title="Mais" />
 
       <main className="space-y-6 px-4">
         <section>

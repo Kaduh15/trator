@@ -9,7 +9,7 @@ import {
   WrenchIcon,
 } from 'lucide-react'
 import { useState } from 'react'
-import { ButtonLogout } from '@/components/button-logout'
+import { PageHeader } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getDashboardQueryOptions } from '@/http/queries/dashboard'
@@ -83,12 +83,7 @@ function RouteComponent() {
 
   return (
     <div className="space-y-2">
-      <header className="flex items-center justify-between border-b px-4 py-3">
-        <div>
-          <h1 className="font-semibold text-lg">Dashboard</h1>
-        </div>
-        <ButtonLogout />
-      </header>
+      <PageHeader title="Dashboard" />
 
       <main className="space-y-6 px-4">
         <section className="flex items-center justify-between gap-3 rounded-lg border bg-card px-4 py-2">
