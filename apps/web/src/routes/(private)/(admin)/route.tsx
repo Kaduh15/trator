@@ -1,5 +1,10 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
-import { EllipsisIcon, FileTextIcon, LayoutDashboardIcon, WrenchIcon } from 'lucide-react'
+import {
+  EllipsisIcon,
+  FileTextIcon,
+  LayoutDashboardIcon,
+  WrenchIcon,
+} from 'lucide-react'
 import { Navbar } from '@/components/navbar'
 
 export const Route = createFileRoute('/(private)/(admin)')({
@@ -40,7 +45,7 @@ function RouteComponent() {
             to: '/mais',
             label: 'Mais',
             icon: EllipsisIcon,
-          }
+          },
         ]}
       />
     </div>
