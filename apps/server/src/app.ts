@@ -1,3 +1,6 @@
+/** biome-ignore-all lint/complexity/noForEach: false positive */
+/** biome-ignore-all lint/suspicious/useIterableCallbackReturn: false positive */
+
 import fastifyCors, { type FastifyCorsOptions } from '@fastify/cors'
 import fastifySwagger from '@fastify/swagger'
 import scalarReference from '@scalar/fastify-api-reference'
@@ -70,23 +73,27 @@ export function buildApp() {
     url: '/api/auth/*',
     async handler(request, reply) {
       try {
+        // Construct request URL
         const url = new URL(request.url, `http://${request.headers.host}`)
+
+        // Convert Fastify headers to standard Headers object
         const headers = new Headers()
-        for (const [key, value] of Object.entries(request.headers)) {
+        Object.entries(request.headers).forEach(([key, value]) => {
           if (value) {
             headers.append(key, value.toString())
           }
-        }
+        })
+        // Create Fetch API-compatible request
         const req = new Request(url.toString(), {
           method: request.method,
           headers,
-          body: request.body ? JSON.stringify(request.body) : undefined,
+          ...(request.body ? { body: JSON.stringify(request.body) } : {}),
         })
+        // Process authentication request
         const response = await auth.handler(req)
+        // Forward response to client
         reply.status(response.status)
-        for (const [key, value] of response.headers.entries()) {
-          reply.header(key, value)
-        }
+        response.headers.forEach((value, key) => reply.header(key, value))
         reply.send(response.body ? await response.text() : null)
       } catch (error) {
         app.log.error({ err: error }, 'Authentication Error:')
