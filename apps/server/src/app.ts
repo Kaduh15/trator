@@ -3,7 +3,6 @@ import fastifySwagger from '@fastify/swagger'
 import scalarReference from '@scalar/fastify-api-reference'
 import { auth } from '@trator/auth'
 import { env } from '@trator/env/server'
-import { toNodeHandler } from 'better-auth/node'
 import Fastify from 'fastify'
 import {
   jsonSchemaTransform,
@@ -29,6 +28,7 @@ async function registerRoutes(app: ReturnType<typeof buildApp>) {
 
 export function buildApp() {
   const app = Fastify({
+    trustProxy: true,
     logger: {
       transport: {
         target: 'pino-pretty',
@@ -66,33 +66,38 @@ export function buildApp() {
 
   app.register(fastifyCors, baseCorsConfig)
 
-  const authHandler = toNodeHandler(auth)
-
   app.route({
     method: ['GET', 'POST'],
     url: '/api/auth/*',
     async handler(request, reply) {
       try {
-        reply.hijack()
-        await authHandler(request.raw, reply.raw)
+        const url = new URL(
+          request.url,
+          `${request.protocol}://${request.headers.host}`
+        )
+        const headers = new Headers()
+        for (const [key, value] of Object.entries(request.headers)) {
+          if (value) {
+            headers.append(key, value.toString())
+          }
+        }
+        const req = new Request(url.toString(), {
+          method: request.method,
+          headers,
+          body: request.body ? JSON.stringify(request.body) : undefined,
+        })
+        const response = await auth.handler(req)
+        reply.status(response.status)
+        for (const [key, value] of response.headers.entries()) {
+          reply.header(key, value)
+        }
+        reply.send(response.body ? await response.text() : null)
       } catch (error) {
         app.log.error({ err: error }, 'Authentication Error:')
-        const rawReply = reply.raw as unknown as {
-          statusCode: number
-          setHeader: (name: string, value: string) => void
-          end: (chunk?: string) => void
-          headersSent?: boolean
-        }
-        if (!rawReply.headersSent) {
-          rawReply.statusCode = 500
-          rawReply.setHeader('content-type', 'application/json')
-          rawReply.end(
-            JSON.stringify({
-              error: 'Internal authentication error',
-              code: 'AUTH_FAILURE',
-            })
-          )
-        }
+        reply.status(500).send({
+          error: 'Internal authentication error',
+          code: 'AUTH_FAILURE',
+        })
       }
     },
   })
