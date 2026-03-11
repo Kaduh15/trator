@@ -28,6 +28,7 @@ async function registerRoutes(app: ReturnType<typeof buildApp>) {
 
 export function buildApp() {
   const app = Fastify({
+    trustProxy: true,
     logger: {
       transport: {
         target: 'pino-pretty',
@@ -70,7 +71,10 @@ export function buildApp() {
     url: '/api/auth/*',
     async handler(request, reply) {
       try {
-        const url = new URL(request.url, `http://${request.headers.host}`)
+        const url = new URL(
+          request.url,
+          `${request.protocol}://${request.headers.host}`
+        )
         const headers = new Headers()
         for (const [key, value] of Object.entries(request.headers)) {
           if (value) {
